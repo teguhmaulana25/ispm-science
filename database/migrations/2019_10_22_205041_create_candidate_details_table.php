@@ -14,7 +14,10 @@ class CreateCandidateDetailsTable extends Migration
     public function up()
     {
         Schema::create('candidate_details', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->unsignedInteger('candidate_id');
+            $table->unsignedInteger('criteria_detail_id');
+            $table->decimal('answer', 12, 2)->unsigned()->default(0);
             $table->timestamps();
         });
     }

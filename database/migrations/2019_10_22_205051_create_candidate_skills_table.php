@@ -14,7 +14,10 @@ class CreateCandidateSkillsTable extends Migration
     public function up()
     {
         Schema::create('candidate_skills', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->unsignedInteger('candidate_id');
+            $table->unsignedInteger('skill_id');
+            $table->decimal('answer', 12, 2)->unsigned()->default(0);
             $table->timestamps();
         });
     }

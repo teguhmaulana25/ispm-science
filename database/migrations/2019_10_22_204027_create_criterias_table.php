@@ -14,7 +14,10 @@ class CreateCriteriasTable extends Migration
     public function up()
     {
         Schema::create('criterias', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->string('name', 45);
+            $table->tinyInteger('step')->unsigned()->default(1)->comment('1:Step 1; 2:Step 2;');
+            $table->tinyInteger('status')->unsigned()->default(0)->comment('0:inactive; 1:active;');
             $table->timestamps();
         });
     }

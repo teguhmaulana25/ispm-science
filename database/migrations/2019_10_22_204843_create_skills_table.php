@@ -14,7 +14,10 @@ class CreateSkillsTable extends Migration
     public function up()
     {
         Schema::create('skills', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->unsignedInteger('division_id');
+            $table->string('name', 45);
+            $table->tinyInteger('status')->unsigned()->default(0)->comment('0:inactive; 1:active;');
             $table->timestamps();
         });
     }

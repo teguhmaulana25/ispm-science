@@ -14,7 +14,14 @@ class CreateCandidatesTable extends Migration
     public function up()
     {
         Schema::create('candidates', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->unsignedInteger('job_vacancy_id');
+            $table->string('name', 40);
+            $table->string('birth_place', 40);
+            $table->date('birth_date');
+            $table->string('email', 140);
+            $table->string('phone', 24);
+            $table->text('address')->nullable();
             $table->timestamps();
         });
     }
