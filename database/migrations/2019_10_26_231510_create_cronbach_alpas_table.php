@@ -14,7 +14,10 @@ class CreateCronbachAlpasTable extends Migration
     public function up()
     {
         Schema::create('cronbach_alpas', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->decimal('start_value', 12, 2)->unsigned()->default(0);
+            $table->decimal('end_value', 12, 2)->unsigned()->default(0);
+            $table->string('value', 45);
             $table->timestamps();
         });
     }
