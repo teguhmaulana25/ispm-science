@@ -20,7 +20,6 @@ class CreateJobVacanciesTable extends Migration
             $table->text('description')->nullable();
             $table->date('start_date');
             $table->date('end_date');
-            $table->decimal('qualification', 12, 2)->unsigned()->default(0);
             $table->tinyInteger('display')->unsigned()->default(0)->comment('0:no; 1:yes;');
             $table->timestamps();
         });
