@@ -8,7 +8,7 @@ use Session;
 use Validator;
 use App\Division;
 use Yajra\Datatables\Datatables;
-class DevisionController extends Controller
+class DivisionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -78,14 +78,14 @@ class DevisionController extends Controller
           ]);
         if ($data) {
           return redirect()
-          ->back()
-          ->with('info', $request->input('name') . ' has been created.');
+            ->route('skills.show', $data->id)
+            ->with('info', $request->input('name') . ' has been created.');
         } else {
           return redirect()
-          ->back()
-          ->withInput()
-          ->withErrors($validation->errors())
-          ->with('error', $request->input('name') . ' failed to create.');    
+            ->back()
+            ->withInput()
+            ->withErrors($validation->errors())
+            ->with('error', $request->input('name') . ' failed to create.');    
         }
       }else {
 

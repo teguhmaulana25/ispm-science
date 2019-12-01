@@ -14,28 +14,30 @@
         </li>
         <li class="panel">
             <a role="button" data-toggle="collapse" data-parent=".navigation" href="#collapse1" aria-expanded="false" aria-controls="collapse1"
-            class="bubble collapsed {{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' ? 'active' : '' }}">
+            class="bubble collapsed {{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' || 
+            Request::segment(1) === 'criterias' || Request::segment(1) === 'criteria-details' ? 'active' : '' }}">
                 <i class="fa fa-archive"></i><span class="sidebar-title">Master Data</span>
             </a>
-            <ul id="collapse1" class="list-unstyled collapse {{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' ? 'in' : '' }}">
+            <ul id="collapse1" class="list-unstyled collapse {{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' || 
+            Request::segment(1) === 'criterias' || Request::segment(1) === 'criteria-details' ? 'in' : '' }}">
                 <li>
-                    <a href="{{ route('divisions.index') }}" class="{{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skill' ? 'active' : '' }}">Division</a>
+                    <a href="{{ route('divisions.index') }}" class="{{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' ? 'active' : '' }}">Division</a>
                 </li>
-                {{-- <li>
-                    <a href="{{ route('skills.index') }}" class="{{ Request::segment(1) === 'skills' ? 'active' : '' }}">Skill</a>
-                </li> --}}
-                <li><a href="index-v2.html">Dashboard v2</a></li>
+                <li>
+                    <a href="{{ route('criterias.index') }}" class="{{ Request::segment(1) === 'criterias' || Request::segment(1) === 'criteria-details'  ? 'active' : '' }}">Criteria</a>
+                </li>
             </ul>
         </li>
-        {{-- <li class="panel">
-            <a role="button" data-toggle="collapse" data-parent=".navigation" href="#collapse1" aria-expanded="false" aria-controls="collapse1" class="bubble active collapsed">
-                <i class="fa fa-archive"></i><span class="sidebar-title">Master Data</span>
+        <li class="panel">
+            <a href="{{ route('job-vacancies.index') }}" class="{{ Request::segment(1) === 'job-vacancies' ? 'active' : '' }}">
+                <i class="fa fa-suitcase"></i><span class="sidebar-title">Job Vacancy</span>
             </a>
-            <ul id="collapse1" class="list-unstyled collapse">
-                <li><a href="index.html">Dashboard v1</a></li>
-                <li><a href="index-v2.html" class="active">Dashboard v2</a></li>
-            </ul>
-        </li> --}}
+        </li>
+        <li class="panel">
+            <a href="{{ route('candidates.index') }}" class="{{ Request::segment(1) === 'candidates' ? 'active' : '' }}">
+                <i class="fa fa-rocket"></i><span class="sidebar-title">Candidate</span>
+            </a>
+        </li>
         <li class="sidebar-category">Configuration</li>
         <li class="panel">
             <a href="{{ route('users.index') }}" class="{{ Request::segment(1) === 'users' ? 'active' : '' }}">

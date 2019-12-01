@@ -1,16 +1,16 @@
 @extends('admin.layouts.admin')
 @section('title')View Division @endsection
 @section('add')
-    <a href="{{ route('divisions.index') }}" class="btn btn-success btn-xs">
+    <a href="{{ route('criterias.index') }}" class="btn btn-success btn-xs">
         <i class="fa fa-arrow-circle-left"></i> Back
     </a>
-    <a href="{{ route('skills.show', $data->id) }}" class="btn btn-success btn-xs">
-        <i class="fa fa-eye"></i> View Data Skill
+    <a href="{{ route('criteria-details.show', $data->id) }}" class="btn btn-success btn-xs">
+        <i class="fa fa-eye"></i> View Data Criterial Detail
     </a>
 @endsection
 @section('breadcrumb')
-	<li><a href="{{ route('divisions.index') }}">Division</a></li>
-	<li class="active"><a href="#">View Division</a></li>
+	<li><a href="{{ route('criterias.index') }}">Criterial</a></li>
+	<li class="active"><a href="#">View Criterial</a></li>
 @endsection
 
 @section('content')
@@ -25,8 +25,20 @@
                     <table class="table table-bordered table-hover table-list pd-top10">
                         <tbody>
                             <tr>
-                                <th width="20%">Division Name</th>
+                                <th width="20%">Criteria Name</th>
                                 <td>{{ $data->name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Percentage</th>
+                                <td>{{ $data->percentage }}</td>
+                            </tr>
+                            <tr>
+                                <th>Type</th>
+                                <td>{!! criteria_type($data->type) !!}</td>
+                            </tr>
+                            <tr>
+                                <th>Step</th>
+                                <td>{!! criteria_step($data->step) !!}</td>
                             </tr>
                             <tr>
                                 <th>Active</th>
@@ -39,16 +51,16 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Name</th>
-                                <th class="text-center">Status</th>
+                                <th class="text-center">Value</th>
                                 <th class="text-center">Created</th>
                                 <th class="text-center">Updated</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($skill as $item)
+                            @foreach ($criteriaDetail as $item)
                                 <tr>
                                     <td>{{ $item->name }}</td>
-                                    <td class="text-center">{!! AI_status($item->status) !!}</td>
+                                    <td>{{ $item->value }}</td>
                                     <td>{{ $item->created_at }}</td>
                                     <td>{{ $item->updated_at }}</td>
                                 </tr>
