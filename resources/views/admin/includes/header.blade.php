@@ -1,7 +1,7 @@
 <!-- Header start-->
 <header>
   <a href="#" class="brand pull-left">
-    <img src="{{ asset('img/logo-andalas.png') }}" alt="Dumet School Logo" width="200" class="logo-sm">
+    <img src="{{ asset('img/logo-dumet-white.png') }}" alt="Dumet School Logo" width="200" class="logo-sm">
   </a>
   <a href="javascript:;" role="button" class="hamburger-menu pull-left"><span></span></a>
   <ul class="notification-bar list-inline pull-right">
@@ -40,16 +40,16 @@
         </div>
       </a>
       <ul aria-labelledby="dropdownMenu2" class="dropdown-menu fs-12 animated fadeInDown">
-        <li><a href="#"><i class="ti-user mr-5"></i> My Profile</a></li>
-        <li><a href="#"><i class="ti-settings mr-5"></i> Account Settings</a></li>
-        <li>
+        <li><a href="{{ route('auth.profile') }}"><i class="fa fa-user"></i> My Profile</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#user_logout_form"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+        {{-- <li>
           <a href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <i class="ti-power-off mr-5"></i>Logout
           </a>
           <form id="logout-form" action="{{ url('logout') }}" method="POST" style="display: none;">
             {{ csrf_field() }}
           </form>
-        </li>
+        </li> --}}
       </ul>
     </li>
     {{-- <li>
@@ -60,3 +60,26 @@
   </ul>
 </header>
 <!-- Header end-->
+
+
+<!-- Modal user logout -->
+<div class="modal modal_area modal_user_area fade" id="user_logout_form" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="user_logout_formLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <i class="fa fa-4x fa-fw fa-exclamation-circle"></i>
+        <h2>Are you sure logout ?</h2>              
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Cancel</button>                
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-flat btn-danger">
+          <span class="fa fa-sign-out"></span> Sign out
+        </a>
+        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+          {{ csrf_field() }}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Modal user logout -->
