@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'username', 'email', 'password', 'status', 'email_verified_at', 'created_by', 'updated_by'
     ];
 
     /**
@@ -36,4 +36,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /** VALIDATE **/
+    public static $rules = [
+        'name' => 'required|max:191',
+        'username' => 'required|max:140|unique:users,username',
+        'email' => 'required|email|max:140',
+        'password' => 'required|min:5|confirmed',
+        'password_confirmation' => 'required|required_with:password',
+        'status' => 'required'
+    ];
+
+    public static function rule_edit($id)
+    {
+        return [
+            'name' => 'required|max:191',
+            'username' => 'required|max:140|unique:users,username,' . $id
+        ];
+    }
+
+    public static function rule_edit_auth($id)
+    {
+        return [
+            'name' => 'required|max:191',
+            'email' => 'required|email|max:140',
+        ];
+    }
 }

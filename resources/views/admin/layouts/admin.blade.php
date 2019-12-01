@@ -5,6 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }} - @yield('title')</title>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('favicon/apple-icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('favicon/apple-icon-60x60.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('favicon/apple-icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('favicon/apple-icon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('favicon/apple-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('favicon/apple-icon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('favicon/apple-icon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('favicon/apple-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-icon-180x180.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{{ asset('favicon/android-icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon/favicon-96x96.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('favicon/manifest.json') }}">
+    <meta name="msapplication-TileColor" content="#263238">
+    <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
+
     <!-- PACE-->
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/PACE/themes/blue/pace-theme-flash.css') }}">
     <script type="text/javascript" src="{{ asset('plugins/PACE/pace.min.js') }}"></script>
@@ -13,7 +32,7 @@
     <!-- Fonts-->
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/themify-icons/themify-icons.css') }}">
     <!-- Font Awesome 5.11.2 -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/font-awesome/css/all.min.css') }}">
     <!-- Malihu Scrollbar-->
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}">
     <!-- Animo.js-->
@@ -47,6 +66,7 @@
         <div class="page-header container-fluid">
           <div class="row">
             <div class="col-sm-6">
+              <!-- Add Button in Header -->
               <h4 class="mt-0 mb-5">@yield('title') @yield('add')</h4>
               <ol class="breadcrumb mb-0">
                 @yield('breadcrumb')
@@ -54,6 +74,7 @@
             </div>
           </div>
         </div>
+        <!-- AREA NOTIF -->
         <div class="page-content container-fluid">
           <div class="row">
             @include('admin.common.error')

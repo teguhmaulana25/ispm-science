@@ -6,7 +6,7 @@
         <div class="v2">
             <div class="logo">
                 <!-- Branding Image -->
-                <img src="{{ asset('img/logo-andalas.png') }}" alt="Dumet School Logo" width="200"/>
+                <img src="{{ asset('img/logo-dumet.png') }}" alt="Dumet School Logo" width="200"/>
             </div>
             <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                 @csrf
