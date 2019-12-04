@@ -1,12 +1,12 @@
 @extends('admin.layouts.admin')
-@section('title')Data Skill @endsection
+@section('title')Data Job Vacancy @endsection
 @section('add')
-    <a href="{{ route('skills.create') }}" class="btn btn-success btn-xs">
-        <i class="fa fa-plus-circle"></i> Add Skill
+    <a href="{{ route('job-vacancies.create') }}" class="btn btn-success btn-xs">
+        <i class="fa fa-plus-circle"></i> Add Job Vacancy
     </a>
 @endsection
 @section('breadcrumb')
-	<li class="active"><a>Skill</a></li>
+	<li class="active"><a>Job Vacancy</a></li>
 @endsection
 
 @section('content')
@@ -19,7 +19,6 @@
                         <tr>
                             <th>Id</th>
                             <th>Division</th>
-                            <th>Name</th>
                             <th>Status</th>
                             <th>Created</th>
                             <th>Updated</th>
@@ -43,11 +42,10 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#table-data').DataTable({
-                ajax: '{!! route('skills.data') !!}',
+                ajax: '{!! route('job-vacancies.data') !!}',
                 columns: [
                     { data: 'id', name: 'id', visible: false, searchable: false },
-                    { data: 'name', name: 'skills.name'},
-                    { data: 'division_name', name: 'divisions.division_name'},
+                    { data: 'name', name: 'job_vacancies.name'},
                     { data: 'status', name: 'status', searchable: false, sClass: 'text-center' },
                     { data: 'created_at', name: 'created_at', searchable: false },
                     { data: 'updated_at', name: 'updated_at', searchable: false },

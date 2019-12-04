@@ -64,48 +64,92 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
         ]);
 
         // {domain_name}/division/* routes
-        Route::resource('divisions', 'DevisionController');    
+        Route::resource('divisions', 'DivisionController');    
         Route::get('/divisions/datatables/get/data', [
-          'uses' => 'DevisionController@data',
+          'uses' => 'DivisionController@data',
           'as' => 'divisions.data'
         ]);
 
         // {domain_name}/skill/* routes
         Route::group(['prefix' => 'skills'], function() {
-          Route::get('/datatables/get/data/{service_id}', [
+          Route::get('/datatables/get/data/{division_id}', [
             'uses' => 'SkillController@data',
             'as' => 'skills.data'
           ]);
-          Route::get('/show/{service_id}', [
+          Route::get('/show/{division_id}', [
             'uses' => 'SkillController@show',
             'as' => 'skills.show'
           ]);
-          Route::post('/store/{service_id}', [
+          Route::post('/store/{division_id}', [
             'uses' => 'SkillController@store',
             'as' => 'skills.store'
           ]);
-          Route::get('/edit/{service_id}/{id}', [
+          Route::get('/edit/{division_id}/{id}', [
             'uses' => 'SkillController@edit',
             'as' => 'skills.edit'
           ]);
-          Route::put('/edit/{service_id}/{id}', [
+          Route::put('/edit/{division_id}/{id}', [
             'uses' => 'SkillController@update',
             'as' => 'skills.update'
           ]);
-          Route::delete('/destroy/{service_id}/{id}', [
+          Route::delete('/destroy/{id}', [
             'uses' => 'SkillController@destroy',
             'as' => 'skills.destroy'
           ]);
         });
 
-        // Route::resource('skills', 'SkillController', [
-        //   'except' => 'show'
-        // ]);    
-        // Route::get('/skills/datatables/get/data', [
-        //   'uses' => 'SkillController@data',
-        //   'as' => 'skills.data'
-        // ]);
+        // {domain_name}/criterias/* routes
+        Route::resource('criterias', 'CriteriaController');    
+        Route::get('/skills/datatables/get/data', [
+          'uses' => 'CriteriaController@data',
+          'as' => 'criterias.data'
+        ]);
 
+        // {domain_name}/skill/* routes
+        Route::group(['prefix' => 'criteria-details'], function() {
+          Route::get('/datatables/get/data/{criteria_id}', [
+            'uses' => 'CriteriaDetailController@data',
+            'as' => 'criteria-details.data'
+          ]);
+          Route::get('/show/{criteria_id}', [
+            'uses' => 'CriteriaDetailController@show',
+            'as' => 'criteria-details.show'
+          ]);
+          Route::post('/store/{criteria_id}', [
+            'uses' => 'CriteriaDetailController@store',
+            'as' => 'criteria-details.store'
+          ]);
+          Route::get('/edit/{criteria_id}/{id}', [
+            'uses' => 'CriteriaDetailController@edit',
+            'as' => 'criteria-details.edit'
+          ]);
+          Route::put('/edit/{criteria_id}/{id}', [
+            'uses' => 'CriteriaDetailController@update',
+            'as' => 'criteria-details.update'
+          ]);
+          Route::delete('/destroy/{id}', [
+            'uses' => 'CriteriaDetailController@destroy',
+            'as' => 'criteria-details.destroy'
+          ]);
+        });
+
+        // {domain_name}/division/* routes
+        Route::resource('job-vacancies', 'JobVacancyController');    
+        Route::get('/job-vacancies/datatables/get/data', [
+          'uses' => 'JobVacancyController@data',
+          'as' => 'job-vacancies.data'
+        ]);
+
+        Route::resource('candidates', 'CandidateController');    
+        Route::get('/candidates/datatables/get/data', [
+          'uses' => 'CandidateController@data',
+          'as' => 'candidates.data'
+        ]);
+
+
+        
+
+        
     });
 });
 

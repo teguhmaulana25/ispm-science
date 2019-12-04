@@ -1,14 +1,13 @@
 @extends('admin.layouts.admin')
-@section('title')Edit Skill @endsection
+@section('title')Edit Division @endsection
 @section('add')
-    <a href="{{ route('skills.show', $data->division_id) }}" class="btn btn-success btn-xs">
+    <a href="{{ route('divisions.index') }}" class="btn btn-success btn-xs">
         <i class="fa fa-arrow-circle-left"></i> Back
     </a>
 @endsection
 @section('breadcrumb')
-    <li><a href="{{ route('divisions.index') }}">Division</a></li>
-    <li><a href="{{ route('skills.show', $data->division_id) }}">Skill</a></li>
-	<li class="active"><a href="#">Edit Skill</a></li>
+	<li><a href="{{ route('divisions.index') }}">Division</a></li>
+	<li class="active"><a href="#">Edit Division</a></li>
 @endsection
 
 @section('content')
@@ -19,15 +18,9 @@
 		<div class="widget">
 			<!-- /.widget-header -->
 			<div class="widget-body">
-                <form action="{{ route('skills.update', [$data->division_id, $data->id]) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
+                <form action="{{ route('divisions.update', $data->id) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
                     @csrf
     
-                    <div class="form-group">
-                        <label class="control-label col-md-2">Divison Name</label>
-                        <div class="col-md-5">
-                            <p class="form-control-static">{{ $data->division->name }}</p>
-                        </div>
-                    </div>
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }} name">
                         <label class="control-label col-md-2">Name</label>
                         <div class="col-md-5">

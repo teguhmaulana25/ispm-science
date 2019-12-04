@@ -6,33 +6,30 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
 use Validator;
-use App\Skill;
+use App\CriteriaDetail;
 use Yajra\Datatables\Datatables;
-class SkillController extends Controller
+class CriteriaDetailController extends Controller
 {
 
-    public function data($division_id)
+    public function data($criteria_id)
     {
-      $users = Skill::select([
-        'skills.id',
-        'skills.division_id',
-        'skills.name',
-        'skills.status',
-        'skills.created_at',
-        'skills.updated_at'
+      $users = CriteriaDetail::select([
+        'criteria_details.id',
+        'criteria_details.criteria_id',
+        'criteria_details.name',
+        'criteria_details.value',
+        'criteria_details.created_at',
+        'criteria_details.updated_at'
       ])
-      ->where('skills.division_id', '=', $division_id);
+      ->where('criteria_details.criteria_id', '=', $criteria_id);
 
       return Datatables::of($users)
-        ->editColumn('status', function($users) {
-          return AI_status($users->status);
-        })
         ->addColumn('action', function($data) {
             return '
-              <a href="' . route('skills.edit', [$data->division_id, $data->id]) . '" class="btn btn-warning btn-block">
+              <a href="' . route('criteria-details.edit', [$data->criteria_id, $data->id]) . '" class="btn btn-warning btn-block">
                 <span class="fas fa-edit fa-fw"></span> Edit
               </a>
-              <button type="button" data-toggle="modal" data-target="#delete_form' . $data->id . '" class="btn btn-danger btn-block" onclick="deleteModal(' . "'" . route('skills.destroy', $data->id) . "','" . $data->id . "','" . $data->name . "','" . Session::token() . "'" . ')">
+              <button type="button" data-toggle="modal" data-target="#delete_form' . $data->id . '" class="btn btn-danger btn-block" onclick="deleteModal(' . "'" . route('criteria-details.destroy', $data->id) . "','" . $data->id . "','" . $data->name . "','" . Session::token() . "'" . ')">
                 <span class="fas fa-trash fa-fw"></span> Delete
               </button>
               <div id="area_modal' . $data->id . '"></div>';
@@ -46,14 +43,14 @@ class SkillController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $division_id)
+    public function store(Request $request, $criteria_id)
     {
       $input = $request->all();
-      $validation = Validator::make($input, Skill::$rules);
+      $validation = Validator::make($input, CriteriaDetail::$rules);
       if ($validation->passes()) {
-        $checkDevision = \App\Division::where('id', $division_id)->count();
+        $checkDevision = \App\Criteria::where('id', $criteria_id)->count();
         if ($checkDevision) {
-          $checkExist = \App\Skill::where('division_id', $division_id)
+          $checkExist = \App\CriteriaDetail::where('criteria_id', $criteria_id)
             ->where('name', '=', $request->input('name'))
             ->count();
           if ($checkExist > 0) {
@@ -62,11 +59,11 @@ class SkillController extends Controller
               ->withInput()
               ->with('error', $request->input('name') . ' has already been taken.');
           } else {
-            $data = Skill::create(
+            $data = CriteriaDetail::create(
               [
-                'division_id' => $division_id,
+                'criteria_id' => $criteria_id,
                 'name' => $request->input('name'),
-                'status' => $request->input('status')
+                'value' => $request->input('value')
               ]);
             if ($data) {
               return redirect()
@@ -103,8 +100,8 @@ class SkillController extends Controller
      */
     public function show($id)
     {
-      $data   = \App\Division::findOrFail($id);
-      return view('admin.pages.skills.show')
+      $data   = \App\Criteria::findOrFail($id);
+      return view('admin.pages.criteria-details.show')
         ->with(compact('data'));
     }
 
@@ -114,10 +111,10 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($division_id, $id)
+    public function edit($criteria_id, $id)
     {
-      $data   = Skill::findOrFail($id);
-      return view('admin.pages.skills.edit')
+      $data   = CriteriaDetail::findOrFail($id);
+      return view('admin.pages.criteria-details.edit')
         ->with(compact('data'));
     }
 
@@ -128,12 +125,12 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $division_id, $id)
+    public function update(Request $request, $criteria_id, $id)
     {
       $input = $request->all();
-      $validation = Validator::make($request->all(), Skill::rule_edit($id));
+      $validation = Validator::make($request->all(), CriteriaDetail::rule_edit($id));
       if ($validation->passes()) {
-        $checkExist = \App\Skill::where('division_id', $division_id)
+        $checkExist = \App\CriteriaDetail::where('criteria_id', $criteria_id)
             ->where('name', '=', $request->input('name'))
             ->where('id', '!=', $id)
             ->count();
@@ -143,15 +140,15 @@ class SkillController extends Controller
             ->withInput()
             ->with('error', $request->input('name') . ' has already been taken.');
         } else {
-          $data = Skill::findOrFail($id);
-          $update = Skill::where('id', $data->id)
+          $data = CriteriaDetail::findOrFail($id);
+          $update = CriteriaDetail::where('id', $data->id)
             ->update([
               'name' => $request->input('name'),
-              'status' => $request->input('status')
+              'value' => $request->input('value')
             ]);
           if ($update) {
             return redirect()
-              ->route('skills.show', $division_id)
+              ->route('criteria-details.show', $criteria_id)
               ->with('info', $request->input('title') . ' has been updated.');
           } else {
             return redirect()
@@ -177,12 +174,12 @@ class SkillController extends Controller
      */
     public function destroy($id)
     {
-      $data = Skill::findOrFail($id);
+      $data = CriteriaDetail::findOrFail($id);
       if($data == null) {
         return redirect()
           ->back()
           ->with('error', 'We have no database record with that data.');
-      }else if(Skill::destroy($id)) {
+      }else if(CriteriaDetail::destroy($id)) {
         return redirect()
           ->back()
           ->with('info', $data->name . ' has been deleted.');

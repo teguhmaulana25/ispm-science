@@ -1,14 +1,14 @@
 @extends('admin.layouts.admin')
-@section('title')Edit Skill @endsection
+@section('title')Edit Criteria Detail @endsection
 @section('add')
-    <a href="{{ route('skills.show', $data->division_id) }}" class="btn btn-success btn-xs">
+    <a href="{{ route('criteria-details.show', $data->criteria_id) }}" class="btn btn-success btn-xs">
         <i class="fa fa-arrow-circle-left"></i> Back
     </a>
 @endsection
 @section('breadcrumb')
-    <li><a href="{{ route('divisions.index') }}">Division</a></li>
-    <li><a href="{{ route('skills.show', $data->division_id) }}">Skill</a></li>
-	<li class="active"><a href="#">Edit Skill</a></li>
+    <li><a href="{{ route('criterias.index') }}">Criteria</a></li>
+    <li><a href="{{ route('criteria-details.show', $data->criteria_id) }}">Criteria Detail</a></li>
+	<li class="active"><a href="#">Edit Criteria Detail</a></li>
 @endsection
 
 @section('content')
@@ -19,13 +19,13 @@
 		<div class="widget">
 			<!-- /.widget-header -->
 			<div class="widget-body">
-                <form action="{{ route('skills.update', [$data->division_id, $data->id]) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
+                <form action="{{ route('criteria-details.update', [$data->criteria_id, $data->id]) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
                     @csrf
     
                     <div class="form-group">
-                        <label class="control-label col-md-2">Divison Name</label>
+                        <label class="control-label col-md-2">Criteria Name</label>
                         <div class="col-md-5">
-                            <p class="form-control-static">{{ $data->division->name }}</p>
+                            <p class="form-control-static">{{ $data->criteria->name }}</p>
                         </div>
                     </div>
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }} name">
@@ -40,18 +40,16 @@
                             @endif
                         </div>
                     </div>
-
-                    <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }} status">
-                        <label class="control-label col-md-2">Status </label>
-                        <div class="col-md-5">
-                            <div>
-                                @foreach (AI_status_list() as $key => $value)
-                                    <div class="radio-custom radio-inline">
-                                      <input id="status_radio-{{ $key }}" type="radio" name="status" value="{{ $key }}" @if($data->status || Request::old('status') == $key) checked @endif required>
-                                      <label for="status_radio-{{ $key }}">{{ $value }}</label>
-                                    </div>
-                                @endforeach
-                            </div>         
+                    <div class="form-group {{ $errors->has('value') ? 'has-error' : '' }}">
+                        <label class="control-label col-md-2">Value</label>
+                        <div class="col-md-4">
+                            <input type="text" name="value" class="form-control " value="{{ Request::old('value') ?: $data->value }}" required="required">
+        
+                            @if ($errors->has('value'))
+                            <span class="help-block">
+                                {{ $errors->first('value') }}
+                            </span>
+                            @endif
                         </div>
                     </div>
     
