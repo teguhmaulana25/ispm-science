@@ -122,4 +122,8 @@ Route::group(['namespace' => 'Customer'], function() {
         'uses' => 'PagesController@index',
         'as' => 'home_pages'
     ]);
+    Route::get('/vacancy-list/{id}', [
+        'uses' => 'PagesController@list',
+        'as' => 'list_vacancy'
+    ]);
 });
