@@ -29,17 +29,6 @@
                     </div>
                 </div>
                 @endforeach
-                {{-- <div class="col-md-6">
-                    <div class="vc-list">
-                        <div class="vc-desc">
-                            <h4>Web Designer</h4>
-                            <span class="vc-time"><span class="text-dl">Deadline</span> 18 September 2020</span>
-                        </div>
-                        <div class="vc-apply">
-                            <a href="#" class="btn btn-block btn-apply">Apply Now</a>
-                        </div>
-                    </div>
-                </div> --}}
             </div>
         </div>
     </div>
