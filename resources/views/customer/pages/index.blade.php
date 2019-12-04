@@ -35,7 +35,7 @@
                             <h3>{{ $row->name }}</h3>
                             <p>({{ ($row->available != 0)? $row->available : "No" }} Jobs Available)</p>
                             @if($row->available != 0)
-                            <a href="#">View Jobs</a>
+                            <a href="{{ route('list_vacancy',$row->id) }}">View Jobs</a>
                             @endif
                         </div>
                     </div>
