@@ -379,10 +379,46 @@ a.navbar-brand img {
     background: linear-gradient(to right, #58d2f5, #00b8ef);
     border-color: #58d2f5;
 }
+.btn-apply.active-btn {
+    height: auto;
+    color: #ffffff;
+    background: linear-gradient(to right, #58d2f5, #00b8ef);
+    border-color: #58d2f5;
+    -webkit-transition: none;
+       -moz-transition: none;
+        -ms-transition: none;
+         -o-transition: none;
+            transition: none;
+}
+.btn-apply.active-btn:hover {
+    color: #ffffff;
+    background: none;
+    background-color: #58d2f5;
+    border-color: #58d2f5;
+}
 .block-vc-list .vc-list:hover .btn-apply {
     color: #ffffff;
     background: #58d2f5;
     border-color: #58d2f5;
+}
+.vc-detail {
+    box-shadow: 0 2px 8px -1px rgba(231, 231, 231, 0.28);
+    border: 1px solid #f8f9fc;
+    border-radius: 5px;
+}
+.vc-detail .vc-summary {
+    border: 1px solid #f5f5f5;
+    padding: 20px 15px;
+    border-radius: 4px;
+    background-color: #fdfdfd;
+}
+.vc-detail .vc-summary .vc-info-date {
+    font-family: open sans,sans-serif;
+    margin-bottom: 3px;
+}
+.vc-detail .vc-summary .vc-info-date span {
+    color: #747474;
+    font-weight: 600;
 }
 
 .top_scroll {
