@@ -1,5 +1,5 @@
 @extends('customer.layouts.frontend')
-@section('title')List Vacancy @endsection
+@section('title')Vacancy Listing @endsection
 
 @section('content')
     <div class="page-header-area">
@@ -24,7 +24,7 @@
                             <span class="vc-time"><span class="text-dl">Deadline</span> {{ date('j F Y', strtotime($r['end_date'])) }}</span>
                         </div>
                         <div class="vc-apply">
-                            <a href="#" class="btn btn-block btn-apply">Apply Now</a>
+                            <a href="{{ route('detail_vacancy', [$data->id, $r['id']]) }}" class="btn btn-block btn-apply">Apply Now</a>
                         </div>
                     </div>
                 </div>
