@@ -30,7 +30,7 @@
                             <div class="vc-info-date"><span>Published on: </span> {{ date('j F Y', strtotime($data['start_date'])) }}</div>
                             <div class="vc-info-date"><span>Application Deadline: </span> {{ date('j F Y', strtotime($data['end_date'])) }}</div>
                         </div>
-                        <a href="#" class="btn btn-block btn-apply active-btn mt-3">Apply Now</a>
+                        <a href="{{ route('apply_vacancy', $secret_key_job) }}" class="btn btn-block btn-apply active-btn mt-3">Apply Now</a>
                     </div>
                 </div>
             </div>
