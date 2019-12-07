@@ -13,7 +13,7 @@ class SkillController extends Controller
 
     public function data($division_id)
     {
-      $users = Skill::select([
+      $data_master = Skill::select([
         'skills.id',
         'skills.division_id',
         'skills.name',
@@ -23,9 +23,9 @@ class SkillController extends Controller
       ])
       ->where('skills.division_id', '=', $division_id);
 
-      return Datatables::of($users)
-        ->editColumn('status', function($users) {
-          return AI_status($users->status);
+      return Datatables::of($data_master)
+        ->editColumn('status', function($data) {
+          return AI_status($data->status);
         })
         ->addColumn('action', function($data) {
             return '

@@ -49,5 +49,10 @@
                 <i class="fa fa-cogs"></i><span class="sidebar-title">Web Setting</span>
             </a>
         </li>
+        <li class="panel">
+            <a href="#" data-toggle="modal" data-target="#user_logout_form">
+                <i class="fas fa-sign-out-alt"></i><span class="sidebar-title">Log Out</span>
+            </a>
+        </li>
     </ul>
 </aside>

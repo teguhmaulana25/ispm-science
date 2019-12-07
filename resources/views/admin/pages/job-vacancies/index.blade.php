@@ -19,8 +19,9 @@
                         <tr>
                             <th>Id</th>
                             <th>Division</th>
-                            <th>Status</th>
-                            <th>Created</th>
+                            <th>Title</th>
+                            <th>Display</th>
+                            <th>Periode</th>
                             <th>Updated</th>
                             <th>Action</th>
                         </tr>
@@ -45,7 +46,8 @@
                 ajax: '{!! route('job-vacancies.data') !!}',
                 columns: [
                     { data: 'id', name: 'id', visible: false, searchable: false },
-                    { data: 'name', name: 'job_vacancies.name'},
+                    { data: 'division_name', name: 'divisions.division_name'},
+                    { data: 'title', name: 'job_vacancies.title'},
                     { data: 'status', name: 'status', searchable: false, sClass: 'text-center' },
                     { data: 'created_at', name: 'created_at', searchable: false },
                     { data: 'updated_at', name: 'updated_at', searchable: false },

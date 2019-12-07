@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
+use DB;
+use Carbon;
 use Validator;
 use App\JobVacancy;
 use Yajra\Datatables\Datatables;
@@ -22,30 +24,31 @@ class JobVacancyController extends Controller
 
     public function data()
     {
-      $users = JobVacancy::select([
+      $data_master = JobVacancy::select([
         'job_vacancies.id',
-        'job_vacancies.name',
-        'job_vacancies.percentage',
-        'job_vacancies.type',
-        'job_vacancies.step',
-        'job_vacancies.status',
+        'job_vacancies.title',
+        'job_vacancies.start_date',
+        'job_vacancies.end_date',
+        'job_vacancies.display',
         'job_vacancies.created_at',
-        'job_vacancies.updated_at'
-      ]);
+        'job_vacancies.updated_at',
+        'divisions.name as division_name'
+      ])
+      ->leftJoin('divisions', 'job_vacancies.division_id', '=', 'divisions.id');
 
-      return Datatables::of($users)
-        ->editColumn('status', function($users) {
-          return AI_status($users->status);
+      return Datatables::of($data_master)
+        ->editColumn('status', function($data) {
+          return display_status($data->display);
         })
         ->addColumn('action', function($data) {
             return '
-              <a href="' . route('job_vacancies.show', $data->id) . '" class="btn btn-info btn-block">
+              <a href="' . route('job-vacancies.show', $data->id) . '" class="btn btn-info btn-block">
                 <span class="fas fa-eye fa-fw"></span> View
               </a>
-              <a href="' . route('job_vacancies.edit', $data->id) . '" class="btn btn-warning btn-block">
+              <a href="' . route('job-vacancies.edit', $data->id) . '" class="btn btn-warning btn-block">
                 <span class="fas fa-edit fa-fw"></span> Edit
               </a>
-              <button type="button" data-toggle="modal" data-target="#delete_form' . $data->id . '" class="btn btn-danger btn-block" onclick="deleteModal(' . "'" . route('job_vacancies.destroy', $data->id) . "','" . $data->id . "','" . $data->name . "','" . Session::token() . "'" . ')">
+              <button type="button" data-toggle="modal" data-target="#delete_form' . $data->id . '" class="btn btn-danger btn-block" onclick="deleteModal(' . "'" . route('job-vacancies.destroy', $data->id) . "','" . $data->id . "','" . $data->name . "','" . Session::token() . "'" . ')">
                 <span class="fas fa-trash fa-fw"></span> Delete
               </button>
               <div id="area_modal' . $data->id . '"></div>';
@@ -60,7 +63,8 @@ class JobVacancyController extends Controller
      */
     public function create()
     {
-      return view('admin.pages.job-vacancies.create');
+      $list_division     = DB::table('divisions')->where('divisions.status', '=', 1)->pluck('name', 'id');
+      return view('admin.pages.job-vacancies.create')->with(compact('list_division'));
     }
 
     /**
@@ -72,27 +76,56 @@ class JobVacancyController extends Controller
     public function store(Request $request)
     {
       $input = $request->all();
-      $validation = Validator::make($input, JobVacancy::$rules);
+      $rule_message 	= array(
+        'division_id.required' => 'The division field is required'
+      );
+      $set_start_date 		= explode(' - ',$request->input('date_range'))[0];
+      $set_end_date 			= explode(' - ',$request->input('date_range'))[1];
+      $start_date 		= Carbon\Carbon::parse($set_start_date)->toDateString();
+			$end_date 			= Carbon\Carbon::parse($set_end_date)->toDateString();
+      $input = array(
+        'division_id' => $request->input('division_id'),
+        'title' => $request->input('title'),
+        'description' => $request->input('description'),
+        'start_date' => $start_date,
+        'end_date' => $end_date,
+        'display' => $request->input('display'),
+      );
+      $validation     = Validator::make($input, JobVacancy::$rules, $rule_message);
       if ($validation->passes()) {
-        $data = JobVacancy::create(
-          [
-            'name' => $request->input('name'),
-            'percentage' => $request->input('percentage'),
-            'type' => $request->input('type'),
-            'step' => $request->input('step'),
-            'status' => $request->input('status')
-          ]);
-        if ($data) {
-          return redirect()
-            ->route('criteria-details.show', $data->id)
-            ->with('info', $request->input('name') . ' has been created.');
-        } else {
+        $checkExist = \App\JobVacancy::where('division_id', $request->input('division_id'))
+            ->where('title', '=', $request->input('title'))
+            ->where('start_date', '=', $start_date)
+            ->where('end_date', '=', $end_date)
+            ->count();
+        if ($checkExist > 0) {
           return redirect()
             ->back()
             ->withInput()
-            ->withErrors($validation->errors())
-            ->with('error', $request->input('name') . ' failed to create.');    
+            ->with('error', $request->input('title') . ' has already been taken.');
+        } else {
+          $data = JobVacancy::create(
+            [
+              'division_id' => $request->input('division_id'),
+              'title' => $request->input('title'),
+              'description' => $request->input('description'),
+              'start_date' => $start_date,
+              'end_date' => $end_date,
+              'display' => $request->input('display')
+            ]);
+          if ($data) {
+            return redirect()
+              ->route('job-vacancies.create-detail', $data->id)
+              ->with('info', $request->input('title') . ' has been created.');
+          } else {
+            return redirect()
+              ->back()
+              ->withInput()
+              ->withErrors($validation->errors())
+              ->with('error', $request->input('title') . ' failed to create.');    
+          }
         }
+        
       }else {
 
         return redirect()
@@ -183,7 +216,8 @@ class JobVacancyController extends Controller
           ->back()
           ->with('error', 'We have no database record with that data.');
       }else if(JobVacancy::destroy($id)) {
-        \App\CriteriaDetail::where('division_id', '=', $data->id)->delete();
+        \App\JobVacancyDetail::where('job_vacancy_id', '=', $data->id)->delete();
+        \App\JobSkillDetail::where('job_vacancy_id', '=', $data->id)->delete();
         return redirect()
           ->back()
           ->with('info', $data->name . ' has been deleted.');
@@ -192,5 +226,18 @@ class JobVacancyController extends Controller
           ->back()
           ->with('error', 'Couldn\'t delete user.');
       }
+    }
+
+    public function create_detail($job_vacancy_id)
+    {
+      $data   = JobVacancy::findOrFail($job_vacancy_id);
+      $jobCriteria = \App\Criteria::orderBy('id', 'DESC')
+        ->get();
+      $jobSkill = \App\Skill::where('division_id', '=', $data->division_id)
+        ->where('status', '=', 1)
+        ->orderBy('id', 'DESC')
+        ->get();
+      return view('admin.pages.job-vacancies.create-detail')
+        ->with(compact('data', 'jobCriteria', 'jobSkill'));
     }
 }

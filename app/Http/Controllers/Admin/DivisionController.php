@@ -22,7 +22,7 @@ class DivisionController extends Controller
 
     public function data()
     {
-      $users = Division::select([
+      $data_master = Division::select([
         'divisions.id',
         'divisions.name',
         'divisions.status',
@@ -30,9 +30,9 @@ class DivisionController extends Controller
         'divisions.updated_at'
       ]);
 
-      return Datatables::of($users)
-        ->editColumn('status', function($users) {
-          return AI_status($users->status);
+      return Datatables::of($data_master)
+        ->editColumn('status', function($data) {
+          return AI_status($data->status);
         })
         ->addColumn('action', function($data) {
             return '

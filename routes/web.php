@@ -139,6 +139,17 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
           'uses' => 'JobVacancyController@data',
           'as' => 'job-vacancies.data'
         ]);
+        Route::group(['prefix' => 'job-vacancies'], function() {
+          Route::get('/create-detail/{job_vacancy_id}', [
+            'uses' => 'JobVacancyController@create_detail',
+            'as' => 'job-vacancies.create-detail'
+          ]);
+          Route::post('/create-detail/{job_vacancy_id}', [
+            'uses' => 'JobVacancyController@store_detail',
+            'as' => 'job-vacancies.store-detail'
+          ]);
+        });
+
 
         Route::resource('candidates', 'CandidateController');    
         Route::get('/candidates/datatables/get/data', [
@@ -166,4 +177,11 @@ Route::group(['namespace' => 'Customer'], function() {
         'uses' => 'PagesController@index',
         'as' => 'home_pages'
     ]);
+
+    Route::get('/os/clear-cache', function() {
+      $exitCode = Artisan::call('cache:clear');
+    });
+    Route::get('/os/clear-view', function() {
+      $exitCode = Artisan::call('view:clear');
+    });
 });

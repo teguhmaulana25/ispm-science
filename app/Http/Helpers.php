@@ -90,4 +90,71 @@ function criteria_step($status, $label = true) {
 
 	return $string;
 }
+
+function display_status_list() {
+	$status = [
+		'No',
+		'Yes'
+	];
+
+	return $status;
+}
+
+function display_status($status, $label = true) {
+	if ($status == 0) {
+		$string = "No";
+		$label_type = "danger";
+	}elseif ($status == 1) {
+		$string = "Yes";
+		$label_type = "success";
+	}
+
+	if ($label == true) {
+		$string = "<small class='label label-" . $label_type . "'>" . $string . "</small>";
+	}
+
+	return $string;
+}
+
+function priority_list() {
+	$status = [
+        '1' => 'Rendah',
+		'2' => 'Sedang',
+		'3' => 'Tinggi'
+	];
+	return $status;
+}
+
+function priority($status, $label = true) {
+	if ($status == 1) {
+		$string = "Rendah";
+		$label_type = "default";
+	}elseif ($status == 2) {
+		$string = "Sedang";
+		$label_type = "default";
+	}elseif ($status == 3) {
+		$string = "Tinggi";
+		$label_type = "default";
+	}
+
+	if ($label == true) {
+		$string = '<small class="label label-' . $label_type . '">' . $string . '</small>';
+	}
+
+	return $string;
+}
+
+function get_criteria_detail($criteria)
+{
+	$output     = DB::table('criteria_details')
+					->select([
+						'criteria_details.id',
+						'criteria_details.name',
+						'criteria_details.value',
+					])
+					->where('criteria_details.criteria_id', '=', $criteria)
+					->get();
+	return $output;
+}
+
 ?>

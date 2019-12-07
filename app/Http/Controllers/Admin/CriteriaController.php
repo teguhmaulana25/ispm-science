@@ -22,7 +22,7 @@ class CriteriaController extends Controller
 
     public function data()
     {
-      $users = Criteria::select([
+      $data_master = Criteria::select([
         'criterias.id',
         'criterias.name',
         'criterias.percentage',
@@ -33,9 +33,9 @@ class CriteriaController extends Controller
         'criterias.updated_at'
       ]);
 
-      return Datatables::of($users)
-        ->editColumn('status', function($users) {
-          return AI_status($users->status);
+      return Datatables::of($data_master)
+        ->editColumn('status', function($data) {
+          return AI_status($data->status);
         })
         ->addColumn('action', function($data) {
             return '

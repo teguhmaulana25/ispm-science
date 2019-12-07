@@ -182,3 +182,19 @@
 .pd-right30{padding-right: 30px !important;}
 .pd-right35{padding-right: 35px !important;}
 .pd-right40{padding-right: 40px !important;}
+
+@media (max-width: 767px) {
+    .wizard > .steps > ul > li {
+        width: 100% !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .wizard > .steps > ul > li {
+        width: 50% !important;
+    }
+}
+@media (min-width: 1200px) {
+    .wizard > .steps > ul > li {
+        width: 50% !important;
+    }
+}

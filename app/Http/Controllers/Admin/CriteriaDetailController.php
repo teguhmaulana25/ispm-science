@@ -13,7 +13,7 @@ class CriteriaDetailController extends Controller
 
     public function data($criteria_id)
     {
-      $users = CriteriaDetail::select([
+      $data_master = CriteriaDetail::select([
         'criteria_details.id',
         'criteria_details.criteria_id',
         'criteria_details.name',
@@ -23,7 +23,7 @@ class CriteriaDetailController extends Controller
       ])
       ->where('criteria_details.criteria_id', '=', $criteria_id);
 
-      return Datatables::of($users)
+      return Datatables::of($data_master)
         ->addColumn('action', function($data) {
             return '
               <a href="' . route('criteria-details.edit', [$data->criteria_id, $data->id]) . '" class="btn btn-warning btn-block">
