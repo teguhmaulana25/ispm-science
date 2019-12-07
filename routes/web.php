@@ -177,11 +177,35 @@ Route::group(['namespace' => 'Customer'], function() {
         'uses' => 'PagesController@index',
         'as' => 'home_pages'
     ]);
-
     Route::get('/os/clear-cache', function() {
       $exitCode = Artisan::call('cache:clear');
     });
     Route::get('/os/clear-view', function() {
       $exitCode = Artisan::call('view:clear');
     });
+    
+    Route::get('/vacancy-list/{id}', [
+        'uses' => 'PagesController@list',
+        'as' => 'list_vacancy'
+    ]);
+    Route::get('/vacancy/detail/{id_division}/{id_vacancies}', [
+        'uses' => 'PagesController@detail',
+        'as' => 'detail_vacancy'
+    ]);
+    Route::get('/vacancy/apply/{job_key}', [
+        'uses' => 'PagesController@apply',
+        'as' => 'apply_vacancy'
+    ]);
+    Route::post('/vacancy/store', [
+        'uses'  => 'PagesController@store',
+        'as'  => 'apply_vacancy_post'
+    ]);
+    Route::get('/vacancy/finish', [
+        'uses' => 'PagesController@finish',
+        'as' => 'apply_vacancy_finish'
+    ]);
+    Route::get('/vacancy/error_vacancy', [
+        'uses' => 'PagesController@error_vacancy',
+        'as' => 'apply_vacancy_error'
+    ]);
 });

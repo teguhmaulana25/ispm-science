@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-colored" style="">
   <div class="container">
-    <a class="navbar-brand" href="#"> 
+    <a class="navbar-brand" href="/"> 
       <img src="{{ asset('img/logo.png') }}" alt="Dumet School Logo" width="200" class="white-logo">
       <img src="{{ asset('img/logo.png') }}" alt="Dumet School Logo" width="200" class="color-logo">
     </a>
