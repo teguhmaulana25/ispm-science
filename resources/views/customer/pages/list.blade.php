@@ -7,7 +7,7 @@
             <div class="head-text pgh">
                 <h3>
                     <span>Vacancy Listing</span>
-                    <div class="division-name">{{ $data->name }}</div>
+                    <div class="name-sub">{{ $data->name }}</div>
                 </h3>
                 <p class="sub-head"><a href="/" class="brd breadcrumb-a">Home</a><span class="brd breadcrumb-active">Vacancy Listing</span></p>
             </div>
