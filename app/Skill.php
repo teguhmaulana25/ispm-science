@@ -10,12 +10,14 @@ class Skill extends Model
 
     /** VALIDATE **/
     public static $rules = [
+        'division_id' => 'required',
         'name' => 'required|max:45',
     ];
 
     public static function rule_edit($id)
     {
         return [
+            'division_id' => 'required',
             'name' => 'required|max:45'
         ];
     }

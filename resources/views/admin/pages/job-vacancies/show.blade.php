@@ -1,16 +1,16 @@
 @extends('admin.layouts.admin')
-@section('title')View Division @endsection
+@section('title')Lihat Lowongan @endsection
 @section('add')
-    <a href="{{ route('divisions.index') }}" class="btn btn-success btn-xs">
-        <i class="fa fa-arrow-circle-left"></i> Back
+    <a href="{{ route('job-vacancies.index') }}" class="btn btn-success btn-xs">
+        <i class="fa fa-arrow-circle-left"></i> Kembali
     </a>
-    <a href="{{ route('skills.show', $data->id) }}" class="btn btn-success btn-xs">
-        <i class="fa fa-eye"></i> View Data Skill
+    <a href="{{ route('job-vacancies.edit', $data->id) }}" class="btn btn-success btn-xs">
+        <i class="fa fa-edit"></i> Edit Lowongan
     </a>
 @endsection
 @section('breadcrumb')
-	<li><a href="{{ route('divisions.index') }}">Division</a></li>
-	<li class="active"><a href="#">View Division</a></li>
+	<li><a href="{{ route('job-vacancies.index') }}">Lowongan</a></li>
+	<li class="active"><a href="#">Lihat Lowongan</a></li>
 @endsection
 
 @section('content')
@@ -22,39 +22,70 @@
 			<!-- /.widget-header -->
 			<div class="widget-body table-responsive">
                 @if(!empty($data))
-                    <table class="table table-bordered table-hover table-list pd-top10">
-                        <tbody>
-                            <tr>
-                                <th width="20%">Division Name</th>
-                                <td>{{ $data->name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Active</th>
-                                <td>{!! AI_status($data->status) !!}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table class="table table-striped table-bordered table-list-product table-view  mg-top20">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Created</th>
-                                <th class="text-center">Updated</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($skill as $item)
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-list pd-top10">
+                            <tbody>
                                 <tr>
-                                    <td>{{ $item->name }}</td>
-                                    <td class="text-center">{!! AI_status($item->status) !!}</td>
-                                    <td>{{ $item->created_at }}</td>
-                                    <td>{{ $item->updated_at }}</td>
+                                    <th width="20%">Division Name</th>
+                                    <td>{{ $data->division->name }}</td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                <tr>
+                                    <th>Title</th>
+                                    <td>{{ $data->title }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>{!! $data->description !!}</td>
+                                </tr>
+                                <tr>
+                                    <th>Periode</th>
+                                    <td>{{ $data->start_date .' To '. $data->end_date }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Criteria</h3>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Criteria</th>
+                                        <th class="text-center">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($jobCriteria as $item)
+                                        <tr>
+                                            <td>{{ get_criteria_parent($item->criteria_detail_id) }}</td>
+                                            <td>{{ get_criteria_name($item->criteria_detail_id) }}</td>
+                                            <td class="text-center">{{ $item->value }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>Skill</h3>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Priority</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($jobSkill as $item)
+                                        <tr>
+                                            <td>{{ $item->skill->name }}</td>
+                                            <td>{!! priority($item->value) !!}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 @endif
                 
 			</div>

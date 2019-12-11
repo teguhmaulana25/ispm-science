@@ -29,93 +29,106 @@
                                 </li>
                                 <li role="tab" class="first current" aria-disabled="false" aria-selected="true">
                                     <a href="{{ route('job-vacancies.create-detail', $data->id) }}">
-                                        <span class="number">2.</span> Job Vacancy Requirment
+                                        <span class="number">2.</span> Job Vacancy Requirement
                                     </a>
                                 </li>
                             </ul>
                         </div><!-- end steps-->
-                        <div class="content clearfix pd-top25">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover table-list pd-top10">
-                                    <tbody>
-                                        <tr>
-                                            <th width="20%">Division Name</th>
-                                            <td>{{ $data->division->name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Title</th>
-                                            <td>{{ $data->title }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Description</th>
-                                            <td>{!! $data->description !!}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Periode</th>
-                                            <td>{{ $data->start_date .' To '. $data->end_date }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <form method="post" action="{{ route('job-vacancies.store-detail', $data->id) }}" >
+                            @csrf
+                            <div class="content clearfix pd-top25">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-list pd-top10">
+                                        <tbody>
+                                            <tr>
+                                                <th width="20%">Division Name</th>
+                                                <td>{{ $data->division->name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Title</th>
+                                                <td>{{ $data->title }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Description</th>
+                                                <td>{!! $data->description !!}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Periode</th>
+                                                <td>{{ $data->start_date .' To '. $data->end_date }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <h3>Criteria</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Name</th>
+                                                <th class="text-center">Criteria</th>
+                                                <th class="text-center">Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($jobCriteria as $key => $item)
+                                                <tr>
+                                                    <td>{{ $item->name }}</td>
+                                                    <td>
+                                                        <select name="data[job_criteria][{{ $key }}][id]" class="form-control job_criteria_select" required>
+                                                            <option value="" data-id="{{ $key }}">- select kriteria -</option>
+                                                            @foreach(get_criteria_detail($item->id) as $key_detail => $value_detail)
+                                                            <option value="{{ $value_detail->id }}" data-id="{{ $key }}" data-value="{{ $value_detail->value }}">
+                                                                    {{ $value_detail->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>                                                    
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="hidden" id="job_criteria_value{{ $key }}" name="data[job_criteria][{{ $key }}][value]" value="" >
+                                                        <span id="job_criteria_value_html{{ $key }}">-</span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <h3 class="pd-top20">Skill</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Name</th>
+                                                <th class="text-center">Priority</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($jobSkill as $key => $item)
+                                                <tr>
+                                                    <td>{{ $item->name }}</td>
+                                                    <td>
+                                                        <input type="hidden" name="data[job_skill][{{ $key }}][id]" value="{{ $item->id }}" >
+                                                        <select name="data[job_skill][{{ $key }}][value]" class="form-control" required>
+                                                            <option value="">- select prioritas -</option>
+                                                            @foreach(priority_list() as $key_detail => $value_detail)
+                                                                <option value="{{ $key_detail }}">
+                                                                    {{ $value_detail }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-block btn-primary" id="submit_save">
+                                    <i class="fa fa-save"></i> Save
+                                </button>
                             </div>
-
-                            <h3>Criteria</h3>
-                            <table class="table table-striped table-bordered table-list-product table-view  mg-top20">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Nama Kriteria</th>
-                                        <th class="text-center">Kriteria</th>
-                                        <th class="text-center">Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($jobCriteria as $key => $item)
-                                        <tr>
-                                            <td>{{ $item->name }}</td>
-                                            <td>
-                                                <select name="data[job_criteria][{{ $key }}]" class="form-control" required>
-                                                    <option value="">- select kriteria -</option>
-                                                    @foreach(get_criteria_detail($item->id) as $key => $value)
-                                                        <option value="{{ $value->id }}">
-                                                            {{ $value->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>                                                    
-                                            </td>
-                                            <td class="text-center">
-                                                <span id="">-</span>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-
-                            <h3 class="pd-top20">Skill</h3>
-                            <table class="table table-striped table-bordered table-list-product table-view  mg-top20">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Skill Name</th>
-                                        <th class="text-center">Prioritas</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($jobSkill as $item)
-                                        <tr>
-                                            <td>{{ $item->name }}</td>
-                                            <td>
-                                                <select name="division_id" class="form-control" required>
-                                                    <option value="">- select prioritas -</option>
-                                                    @foreach(priority_list() as $key => $value)
-                                                        <option value="{{ $key }}">
-                                                            {{ $value}}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                        </form>
                     </div>
                 @endif
 			</div>
@@ -130,39 +143,31 @@
 	<!-- jQuery Steps-->
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/jquery.steps/demo/css/jquery.steps.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-
-    <!-- Daterange -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
 @endpush
 
 @push('scripts')
     <!-- jQuery Steps-->
     <script src="{{ asset('plugins/jquery.steps/build/jquery.steps.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}" type="text/javascript"></script>
-    <!-- CKEeditor-->
-    <script src="{{ asset('plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script> 
-     <!-- Daterange -->
-     <script src="{{ asset('plugins/daterangepicker/moment.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>   
     <script type="text/javascript">
-        $("#division_id").select2();
-        CKEDITOR.replace( 'description', {
-            uiColor: '#E0E0E0'
+
+        $(".job_criteria_select").bind("change", function(e) {
+            var data_select = $(this).val();
+            var data_id = $(this).find(':selected').attr('data-id');
+            var data_value = $(this).find(':selected').attr('data-value');
+            if (data_select) {
+                console.log('data_select', data_select);
+                console.log('data_id', data_id);
+                console.log('data_value', data_value);
+                $("#job_criteria_value" + data_id).val(data_value);
+                $("#job_criteria_value_html" + data_id).html(data_value);
+            } else {
+                console.log('data_select', data_select);
+                $("#job_criteria_value" + data_id).val();
+                $("#job_criteria_value_html" + data_id).html('-');                
+            }
         });
 
-        $('#date_range').daterangepicker({
-			autoApply: true,
-			ranges: {
-			    Today: [moment(), moment()],
-			    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-			    "Last 7 Days": [moment().subtract(6, "days"), moment()],
-			    "Last 30 Days": [moment().subtract(29, "days"), moment()],
-			    "This Month": [moment().startOf("month"), moment().endOf("month")],
-			    "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
-			},
-			startDate: moment().subtract(29, "days"),
-			endDate: moment()
-		});
     </script>
 
 @endpush

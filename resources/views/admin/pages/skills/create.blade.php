@@ -1,14 +1,13 @@
 @extends('admin.layouts.admin')
-@section('title')Edit Skill @endsection
+@section('title')Add Skill @endsection
 @section('add')
-    <a href="{{ route('skills.show', $data->division_id) }}" class="btn btn-success btn-xs">
+    <a href="{{ route('skills.index') }}" class="btn btn-success btn-xs">
         <i class="fa fa-arrow-circle-left"></i> Back
     </a>
 @endsection
 @section('breadcrumb')
-    <li><a href="{{ route('divisions.index') }}">Division</a></li>
-    <li><a href="{{ route('skills.show', $data->division_id) }}">Skill</a></li>
-	<li class="active"><a href="#">Edit Skill</a></li>
+	<li><a href="{{ route('skills.index') }}">Skill</a></li>
+	<li class="active"><a href="#">Add Skill</a></li>
 @endsection
 
 @section('content')
@@ -19,16 +18,16 @@
 		<div class="widget">
 			<!-- /.widget-header -->
 			<div class="widget-body">
-                <form action="{{ route('skills.update', $data->id) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
+                <form action="{{ route('skills.store') }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
                     @csrf
-    
+
                     <div class="form-group {{ $errors->has('division_id') ? 'has-error' : '' }}">
                         <label class="control-label col-md-2">Division</label>
                         <div class="col-md-5">
-                            <select name="division_id" id="division_id" class="form-control" required>
+                            <select name="division_id" id="division_id" class="form-control" autofocus required>
                                 <option value="">- select division -</option>
                                 @foreach($list_division as $key => $value)
-                                    <option value="{{ $key }}" @if($key == $data->division_id) selected @endif>
+                                    <option value="{{ $key }}">
                                         {{ $value}}
                                     </option>
                                 @endforeach
@@ -40,26 +39,27 @@
                             @endif
                         </div>
                     </div>
+    
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }} name">
                         <label class="control-label col-md-2">Name</label>
                         <div class="col-md-5">
-                            <input type="text" name="name" class="form-control " value="{{ Request::old('name') ?: $data->name }}" required="required" autofocus="autofocus">
+                            <input type="text" name="name" class="form-control" value="{{ Request::old('name') ?: '' }}" required="required" maxlength="45">
         
                             @if ($errors->has('name'))
-                            <span class="help-block">
-                                {{ $errors->first('name') }}
-                            </span>
+                                <span class="help-block">
+                                    {{ $errors->first('name') }}
+                                </span>
                             @endif
                         </div>
                     </div>
-
+    
                     <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }} status">
-                        <label class="control-label col-md-2">Status </label>
+                        <label class="control-label col-md-2">Status Active</label>
                         <div class="col-md-5">
                             <div>
                                 @foreach (AI_status_list() as $key => $value)
                                     <div class="radio-custom radio-inline">
-                                      <input id="status_radio-{{ $key }}" type="radio" name="status" value="{{ $key }}" @if($data->status || Request::old('status') == $key) checked @endif required>
+                                      <input id="status_radio-{{ $key }}" type="radio" name="status" value="{{ $key }}" @if(Request::old('status') == $key) checked @endif required>
                                       <label for="status_radio-{{ $key }}">{{ $value }}</label>
                                     </div>
                                 @endforeach
@@ -68,13 +68,12 @@
                     </div>
     
                     <div class="form-group">
-                        {{ method_field('PUT') }}
                         <div class="col-md-offset-2 col-md-5">
                             <button type="submit" class="btn btn-sm btn-flat btn-primary" id="submit_save">
                                 <i class="fa fa-save"></i> Save
                             </button>                                    
                         </div>
-                    </div>                    
+                    </div>
                 </form>
                 
 			</div>
@@ -85,5 +84,14 @@
 	<!--/.col (right) -->
 @endsection
 
+@push('css')
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+@endpush
+
 @push('scripts')
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $("#division_id").select2();
+    </script>
+
 @endpush
