@@ -16,6 +16,7 @@ class CreateJobVacanciesTable extends Migration
         Schema::create('job_vacancies', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('division_id');
+            $table->unsignedInteger('user_id');
             $table->string('title', 50);
             $table->text('description')->nullable();
             $table->date('start_date');

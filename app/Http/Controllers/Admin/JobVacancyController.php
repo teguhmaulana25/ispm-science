@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use DB;
 use Carbon;
@@ -72,6 +73,7 @@ class JobVacancyController extends Controller
       $start_date 		= Carbon\Carbon::parse($set_start_date)->toDateString();
 			$end_date 			= Carbon\Carbon::parse($set_end_date)->toDateString();
       $input = array(
+        'user_id' => Auth::user()->id,
         'division_id' => $request->input('division_id'),
         'title' => $request->input('title'),
         'description' => $request->input('description'),
@@ -163,6 +165,7 @@ class JobVacancyController extends Controller
       $start_date 		= Carbon\Carbon::parse($set_start_date)->toDateString();
 			$end_date 			= Carbon\Carbon::parse($set_end_date)->toDateString();
       $input_validate = array(
+        'user_id' => Auth::user()->id,
         'division_id' => $request->input('division_id'),
         'title' => $request->input('title'),
         'description' => $request->input('description'),

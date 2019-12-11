@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCronbachAlpasTable extends Migration
+class CreateCronbachAlphasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateCronbachAlpasTable extends Migration
      */
     public function up()
     {
-        Schema::create('cronbach_alpas', function (Blueprint $table) {
+        Schema::create('cronbach_alphas', function (Blueprint $table) {
             $table->increments('id');
-            $table->decimal('start_value', 12, 2)->unsigned()->default(0);
-            $table->decimal('end_value', 12, 2)->unsigned()->default(0);
-            $table->string('value', 45);
+            $table->string('label', 20);
+            $table->decimal('min', 12, 2)->unsigned()->default(0);
+            $table->decimal('max', 12, 2)->unsigned()->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateCronbachAlpasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cronbach_alpas');
+        Schema::dropIfExists('cronbach_alphas');
     }
 }
