@@ -1,13 +1,13 @@
 @extends('admin.layouts.admin')
-@section('title')Edit Division @endsection
+@section('title')Edit Criteria @endsection
 @section('add')
-    <a href="{{ route('divisions.index') }}" class="btn btn-success btn-xs">
+    <a href="{{ route('criterias.index') }}" class="btn btn-success btn-xs">
         <i class="fa fa-arrow-circle-left"></i> Back
     </a>
 @endsection
 @section('breadcrumb')
-	<li><a href="{{ route('divisions.index') }}">Division</a></li>
-	<li class="active"><a href="#">Edit Division</a></li>
+	<li><a href="{{ route('criterias.index') }}">Criteria</a></li>
+	<li class="active"><a href="#">Edit Criteria</a></li>
 @endsection
 
 @section('content')
@@ -18,7 +18,7 @@
 		<div class="widget">
 			<!-- /.widget-header -->
 			<div class="widget-body">
-                <form action="{{ route('divisions.update', $data->id) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
+                <form action="{{ route('criterias.update', $data->id) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
                     @csrf
     
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }} name">
@@ -34,13 +34,52 @@
                         </div>
                     </div>
 
+                    <div class="form-group {{ $errors->has('percentage') ? 'has-error' : '' }}">
+                        <label class="control-label col-md-2">Percentage</label>
+                        <div class="col-md-3">
+                            <input type="text" name="percentage" class="form-control" value="{{ Request::old('percentage') ?: $data->percentage }}" required="required">
+        
+                            @if ($errors->has('percentage'))
+                                <span class="help-block">
+                                    {{ $errors->first('percentage') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                        <label class="control-label col-md-2">Type</label>
+                        <div class="col-md-5">
+                            <div>
+                                @foreach (criteria_type_list() as $key => $value)
+                                    <div class="radio-custom radio-inline">
+                                      <input id="type_radio-{{ $key }}" type="radio" name="type" value="{{ $key }}" @if($data->type == $key) checked @endif required>
+                                      <label for="type_radio-{{ $key }}">{{ $value }}</label>
+                                    </div>
+                                @endforeach
+                            </div>         
+                        </div>
+                    </div>
+                    <div class="form-group {{ $errors->has('step') ? 'has-error' : '' }}">
+                        <label class="control-label col-md-2">Step</label>
+                        <div class="col-md-5">
+                            <div>
+                                @foreach (criteria_step_list() as $key => $value)
+                                    <div class="radio-custom radio-inline">
+                                      <input id="step_radio-{{ $key }}" type="radio" name="step" value="{{ $key }}" @if($data->step == $key) checked @endif required>
+                                      <label for="step_radio-{{ $key }}">{{ $value }}</label>
+                                    </div>
+                                @endforeach
+                            </div>         
+                        </div>
+                    </div>
+
                     <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }} status">
                         <label class="control-label col-md-2">Status </label>
                         <div class="col-md-5">
                             <div>
                                 @foreach (AI_status_list() as $key => $value)
                                     <div class="radio-custom radio-inline">
-                                      <input id="status_radio-{{ $key }}" type="radio" name="status" value="{{ $key }}" @if($data->status || Request::old('status') == $key) checked @endif required>
+                                      <input id="status_radio-{{ $key }}" type="radio" name="status" value="{{ $key }}" @if($data->status == $key) checked @endif required>
                                       <label for="status_radio-{{ $key }}">{{ $value }}</label>
                                     </div>
                                 @endforeach

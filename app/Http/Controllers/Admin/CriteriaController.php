@@ -112,6 +112,9 @@ class CriteriaController extends Controller
           $update = Criteria::where('id', $data->id)
             ->update([
               'name' => $request->input('name'),
+              'percentage' => $request->input('percentage'),
+              'type' => $request->input('type'),
+              'step' => $request->input('step'),
               'status' => $request->input('status')
             ]);
           if ($update) {
