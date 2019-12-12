@@ -50,7 +50,7 @@ function criteria_type_list() {
 	return $status;
 }
 
-function criteria_type($status, $label = true) {
+function criteria_type($status, $label = false) {
 	if ($status == 1) {
 		$string = "Benefit";
 		$label_type = "success";
@@ -75,7 +75,7 @@ function criteria_step_list() {
 	return $status;
 }
 
-function criteria_step($status, $label = true) {
+function criteria_step($status, $label = false) {
 	if ($status == 1) {
 		$string = "Step 1";
 		$label_type = "default";
@@ -118,21 +118,21 @@ function display_status($status, $label = true) {
 
 function priority_list() {
 	$status = [
-        '1' => 'Rendah',
-		'2' => 'Sedang',
-		'3' => 'Tinggi'
+        '0.5' => 'Rendah',
+		'0.8' => 'Sedang',
+		'1' => 'Tinggi'
 	];
 	return $status;
 }
 
-function priority($status, $label = true) {
-	if ($status == 1) {
+function priority($status, $label = false) {
+	if ($status == '0.5') {
 		$string = "Rendah";
 		$label_type = "default";
-	}elseif ($status == 2) {
+	}elseif ($status == '0.8') {
 		$string = "Sedang";
 		$label_type = "default";
-	}elseif ($status == 3) {
+	}elseif ($status == '1') {
 		$string = "Tinggi";
 		$label_type = "default";
 	}
@@ -156,5 +156,59 @@ function get_criteria_detail($criteria)
 					->get();
 	return $output;
 }
+
+function get_criteria_name($code)
+{
+     $output     = DB::table('criteria_details')
+                     ->select([
+                         'criteria_details.name',
+                     ])
+                     ->where('criteria_details.id', '=', $code)
+                     ->first();
+     if(!empty($output))
+     {
+         return $output->name;
+     }else{
+         return 'Not Found';
+     }
+}
+
+function get_criteria_parent($code)
+{
+	$output     = DB::table('criteria_details')
+					->select([
+						'criterias.name',
+					])
+					->leftJoin('criterias', 'criteria_details.criteria_id', '=', 'criterias.id')
+					->where('criteria_details.id', '=', $code)
+					->first();
+	if(!empty($output))
+	{
+		return $output->name;
+	}else{
+		return 'Not Found';
+	}
+}
+
+function get_criteria_list($code) {
+	$getData = DB::table('criteria_details')
+		->where('criteria_details.id', '=', $code)
+		->first();
+
+	$output = [];
+	if ($getData) {
+		$output     = DB::table('criteria_details')
+			->select([
+				'criteria_details.id',
+				'criteria_details.name',
+				'criteria_details.value',
+			])
+			->where('criteria_details.criteria_id', '=', $getData->criteria_id)
+			->get();
+	}
+	return $output;
+}
+
+
 
 ?>

@@ -1,12 +1,12 @@
 @extends('admin.layouts.admin')
-@section('title')Data Job Vacancy @endsection
+@section('title')Data Skill @endsection
 @section('add')
-    <a href="{{ route('job-vacancies.create') }}" class="btn btn-success btn-xs">
-        <i class="fa fa-plus-circle"></i> Add Job Vacancy
+    <a href="{{ route('skills.create') }}" class="btn btn-success btn-xs">
+        <i class="fa fa-plus-circle"></i> Add Skill
     </a>
 @endsection
 @section('breadcrumb')
-	<li class="active"><a>Job Vacancy</a></li>
+	<li class="active"><a>Skill</a></li>
 @endsection
 
 @section('content')
@@ -19,9 +19,9 @@
                         <tr>
                             <th>Id</th>
                             <th>Division</th>
-                            <th>Title</th>
-                            <th>Display</th>
-                            <th>Periode</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Created</th>
                             <th>Updated</th>
                             <th>Action</th>
                         </tr>
@@ -43,13 +43,13 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#table-data').DataTable({
-                ajax: '{!! route('job-vacancies.data') !!}',
+                ajax: '{!! route('skills.data') !!}',
                 columns: [
                     { data: 'id', name: 'id', visible: false, searchable: false },
                     { data: 'division_name', name: 'divisions.division_name'},
-                    { data: 'title', name: 'job_vacancies.title'},
+                    { data: 'name', name: 'skills.name'},
                     { data: 'status', name: 'status', searchable: false, sClass: 'text-center' },
-                    { data: 'periode', name: 'periode', searchable: false, sClass: 'text-center' },
+                    { data: 'created_at', name: 'created_at', searchable: false },
                     { data: 'updated_at', name: 'updated_at', searchable: false },
                     { data: 'action', name: 'action', orderable: false, searchable: false, sClass: 'text-left action-column' }
                 ],

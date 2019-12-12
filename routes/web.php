@@ -71,6 +71,12 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
         ]);
 
         // {domain_name}/skill/* routes
+        // Route::resource('skills', 'SkillController');    
+        // Route::get('/skills/datatables/get/data', [
+        //   'uses' => 'SkillController@data',
+        //   'as' => 'skills.data'
+        // ]);
+
         Route::group(['prefix' => 'skills'], function() {
           Route::get('/datatables/get/data/{division_id}', [
             'uses' => 'SkillController@data',
@@ -100,12 +106,12 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
 
         // {domain_name}/criterias/* routes
         Route::resource('criterias', 'CriteriaController');    
-        Route::get('/skills/datatables/get/data', [
+        Route::get('/criterias/datatables/get/data', [
           'uses' => 'CriteriaController@data',
           'as' => 'criterias.data'
         ]);
 
-        // {domain_name}/skill/* routes
+        // {domain_name}/criteria-details/* routes
         Route::group(['prefix' => 'criteria-details'], function() {
           Route::get('/datatables/get/data/{criteria_id}', [
             'uses' => 'CriteriaDetailController@data',
@@ -156,6 +162,62 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
           'uses' => 'CandidateController@data',
           'as' => 'candidates.data'
         ]);
+
+        // {domain_name}/hiring-external/* routes
+        Route::group(['prefix' => 'hiring-external'], function() {
+          Route::get('/', [
+            'uses' => 'HiringExternalController@index',
+            'as' => 'hiring-external.index'
+          ]);
+          Route::post('filter', [
+            'uses' => 'HiringExternalController@filter',
+            'as' => 'hiring-external.filter'
+          ]);
+          // Route::post('/store/{criteria_id}', [
+          //   'uses' => 'CriteriaDetailController@store',
+          //   'as' => 'criteria-details.store'
+          // ]);
+          // Route::get('/edit/{criteria_id}/{id}', [
+          //   'uses' => 'CriteriaDetailController@edit',
+          //   'as' => 'criteria-details.edit'
+          // ]);
+          // Route::put('/edit/{criteria_id}/{id}', [
+          //   'uses' => 'CriteriaDetailController@update',
+          //   'as' => 'criteria-details.update'
+          // ]);
+          // Route::delete('/destroy/{id}', [
+          //   'uses' => 'CriteriaDetailController@destroy',
+          //   'as' => 'criteria-details.destroy'
+          // ]);
+        });
+
+        // {domain_name}/hiring-internal/* routes
+        Route::group(['prefix' => 'hiring-internal'], function() {
+          Route::get('/', [
+            'uses' => 'HiringInternalController@index',
+            'as' => 'hiring-internal.index'
+          ]);
+          Route::post('/', [
+            'uses' => 'HiringInternalController@filter',
+            'as' => 'hiring-internal.filter'
+          ]);
+          // Route::post('/store/{criteria_id}', [
+          //   'uses' => 'CriteriaDetailController@store',
+          //   'as' => 'criteria-details.store'
+          // ]);
+          // Route::get('/edit/{criteria_id}/{id}', [
+          //   'uses' => 'CriteriaDetailController@edit',
+          //   'as' => 'criteria-details.edit'
+          // ]);
+          // Route::put('/edit/{criteria_id}/{id}', [
+          //   'uses' => 'CriteriaDetailController@update',
+          //   'as' => 'criteria-details.update'
+          // ]);
+          // Route::delete('/destroy/{id}', [
+          //   'uses' => 'CriteriaDetailController@destroy',
+          //   'as' => 'criteria-details.destroy'
+          // ]);
+        });
 
 
         

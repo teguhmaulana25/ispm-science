@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use DB;
 use Carbon;
@@ -12,11 +13,7 @@ use App\JobVacancy;
 use Yajra\Datatables\Datatables;
 class JobVacancyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
       return view('admin.pages.job-vacancies.index');
@@ -40,6 +37,9 @@ class JobVacancyController extends Controller
         ->editColumn('status', function($data) {
           return display_status($data->display);
         })
+        ->editColumn('periode', function($data) {
+          return $data->start_date. ' - ' .$data->end_date;
+        })
         ->addColumn('action', function($data) {
             return '
               <a href="' . route('job-vacancies.show', $data->id) . '" class="btn btn-info btn-block">
@@ -56,23 +56,12 @@ class JobVacancyController extends Controller
         ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
       $list_division     = DB::table('divisions')->where('divisions.status', '=', 1)->pluck('name', 'id');
       return view('admin.pages.job-vacancies.create')->with(compact('list_division'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
       $input = $request->all();
@@ -106,6 +95,7 @@ class JobVacancyController extends Controller
         } else {
           $data = JobVacancy::create(
             [
+              'user_id' => Auth::user()->id,
               'division_id' => $request->input('division_id'),
               'title' => $request->input('title'),
               'description' => $request->input('description'),
@@ -135,64 +125,115 @@ class JobVacancyController extends Controller
       }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
       $data   = JobVacancy::findOrFail($id);
-      $criteriaDetail = \App\CriteriaDetail::where('criteria_id', '=', $id)
+      $jobCriteria = \App\JobVacancyDetail::where('job_vacancy_id', '=', $id)
+        ->orderBy('id', 'DESC')
+        ->get();
+      $jobSkill = \App\JobSkillDetail::where('job_vacancy_id', '=', $id)
         ->orderBy('id', 'DESC')
         ->get();
       return view('admin.pages.job-vacancies.show')
-        ->with(compact('data', 'criteriaDetail'));
+        ->with(compact('data', 'jobCriteria', 'jobSkill'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
       $data   = JobVacancy::findOrFail($id);
+      $jobCriteria = \App\JobVacancyDetail::where('job_vacancy_id', '=', $id)
+        ->orderBy('id', 'DESC')
+        ->get();
+      $jobSkill = \App\JobSkillDetail::where('job_vacancy_id', '=', $id)
+        ->orderBy('id', 'DESC')
+        ->get();
+      $list_division     = DB::table('divisions')->where('divisions.status', '=', 1)->pluck('name', 'id');
+      $start_date = Carbon\Carbon::parse($data->start_date)->format('m/d/Y h:m A');
+      $end_date = Carbon\Carbon::parse($data->end_date)->format('m/d/Y h:m A');
       return view('admin.pages.job-vacancies.edit')
-        ->with(compact('data'));
+        ->with(compact('data', 'list_division', 'jobCriteria', 'jobSkill', 'start_date', 'end_date'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
       $input = $request->all();
-      $validation = Validator::make($request->all(), JobVacancy::rule_edit($id));
+      $rule_message 	= array(
+        'division_id.required' => 'The division field is required'
+      );
+      $set_start_date 		= explode(' - ',$request->input('date_range'))[0];
+      $set_end_date 			= explode(' - ',$request->input('date_range'))[1];
+      $start_date 		= Carbon\Carbon::parse($set_start_date)->toDateString();
+			$end_date 			= Carbon\Carbon::parse($set_end_date)->toDateString();
+      $input_validate = array(
+        'division_id' => $request->input('division_id'),
+        'title' => $request->input('title'),
+        'description' => $request->input('description'),
+        'start_date' => $start_date,
+        'end_date' => $end_date,
+        'display' => $request->input('display'),
+      );
+      $validation     = Validator::make($input_validate, JobVacancy::rule_edit($id), $rule_message);
       if ($validation->passes()) {
-          $data = JobVacancy::findOrFail($id);
-          $update = JobVacancy::where('id', $data->id)
-            ->update([
-              'name' => $request->input('name'),
-              'status' => $request->input('status')
-            ]);
-          if ($update) {
-            return redirect()
-            ->back()
-            ->with('info', $request->input('name') . ' has been updated.');
-          } else {
-            return redirect()
+        $checkExist = \App\JobVacancy::where('division_id', $request->input('division_id'))
+            ->where('title', '=', $request->input('title'))
+            ->where('start_date', '=', $start_date)
+            ->where('end_date', '=', $end_date)
+            ->where('id', '!=', $id)
+            ->count();
+        if ($checkExist > 0) {
+          return redirect()
             ->back()
             ->withInput()
-            ->withErrors($validation->errors())
-            ->with('error', $request->input('name') . ' failed to update.');            
+            ->with('error', $request->input('title') . ' has already been taken.');
+        } else {
+          if ($input['data']['job_criteria'] && $input['data']['job_skill']) {
+            $data = JobVacancy::findOrFail($id);
+            $update = JobVacancy::where('id', $data->id)
+              ->update([
+                'user_id' => Auth::user()->id,
+                'division_id' => $request->input('division_id'),
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'display' => $request->input('display')
+              ]);
+            if ($update) {
+              \App\JobVacancyDetail::where('job_vacancy_id', '=', $data->id)->delete();
+              \App\JobSkillDetail::where('job_vacancy_id', '=', $data->id)->delete();              
+              foreach ($input['data']['job_criteria'] as $key => $value) {
+                \App\JobVacancyDetail::create([
+                  'job_vacancy_id' => $data->id,
+                  'criteria_detail_id' => $value['id'],
+                  'value' => $value['value']
+                ]);
+              }
+              foreach ($input['data']['job_skill'] as $key => $value) {
+                \App\JobSkillDetail::create([
+                  'job_vacancy_id' => $data->id,
+                  'skill_id' => $value['id'],
+                  'value' => $value['value']
+                ]);
+              }
+              return redirect()
+                ->back()
+                ->with('info', $request->input('title') . ' has been updated.');
+            } else {
+              return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors($validation->errors())
+                ->with('error', $request->input('title') . ' failed to update.');            
+            }
+          } else {
+            return redirect()
+              ->back()
+              ->withInput()
+              ->withErrors($validation->errors())
+              ->with('error', 'Silahkan melengkapi data kriteria dan kemampuan');    
           }
+        }
+
 
       }else{
         return redirect()
@@ -202,12 +243,6 @@ class JobVacancyController extends Controller
       }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
       $data = JobVacancy::findOrFail($id);
@@ -239,5 +274,34 @@ class JobVacancyController extends Controller
         ->get();
       return view('admin.pages.job-vacancies.create-detail')
         ->with(compact('data', 'jobCriteria', 'jobSkill'));
+    }
+
+    public function store_detail(Request $request, $job_vacancy_id) {
+      $input = $request->all();
+      if ($input['data']['job_criteria'] && $input['data']['job_skill']) {
+        foreach ($input['data']['job_criteria'] as $key => $value) {
+          \App\JobVacancyDetail::create([
+            'job_vacancy_id' => $job_vacancy_id,
+            'criteria_detail_id' => $value['id'],
+            'value' => $value['value']
+          ]);
+        }
+        foreach ($input['data']['job_skill'] as $key => $value) {
+          \App\JobSkillDetail::create([
+            'job_vacancy_id' => $job_vacancy_id,
+            'skill_id' => $value['id'],
+            'value' => $value['value']
+          ]);
+        }
+        return redirect()
+          ->route('job-vacancies.show', $job_vacancy_id)
+          ->with('info', 'Data berhasil disimpan');
+      } else {
+        return redirect()
+          ->back()
+          ->withInput()
+          ->withErrors($validation->errors())
+          ->with('error', 'Silahkan melengkapi data kriteria dan kemampuan');    
+      }
     }
 }

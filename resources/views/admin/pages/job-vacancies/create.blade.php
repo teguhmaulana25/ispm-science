@@ -30,7 +30,7 @@
                             </li>
                             <li role="tab" class="disabled" aria-disabled="true">
                                 <a href="#">
-                                    <span class="number">2.</span> Job Vacancy Requirment
+                                    <span class="number">2.</span> Job Vacancy Requirement
                                 </a>
                             </li>
                         </ul>

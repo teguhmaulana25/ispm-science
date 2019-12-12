@@ -21,7 +21,7 @@
             <ul id="collapse1" class="list-unstyled collapse {{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' || 
             Request::segment(1) === 'criterias' || Request::segment(1) === 'criteria-details' ? 'in' : '' }}">
                 <li>
-                    <a href="{{ route('divisions.index') }}" class="{{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' ? 'active' : '' }}">Division</a>
+                    <a href="{{ route('divisions.index') }}" class="{{ Request::segment(1) === 'divisions' ? 'active' : '' }}">Division</a>
                 </li>
                 <li>
                     <a href="{{ route('criterias.index') }}" class="{{ Request::segment(1) === 'criterias' || Request::segment(1) === 'criteria-details'  ? 'active' : '' }}">Criteria</a>
@@ -38,15 +38,25 @@
                 <i class="fa fa-rocket"></i><span class="sidebar-title">Candidate</span>
             </a>
         </li>
+        <li class="panel">
+            <a role="button" data-toggle="collapse" data-parent=".navigation" href="#requirement" aria-expanded="false" aria-controls="collapse1"
+            class="bubble collapsed {{ Request::segment(1) === 'hiring-external' || Request::segment(1) === 'hiring-internal' ? 'active' : '' }}">
+                <i class="fa fa-sitemap"></i><span class="sidebar-title">Hiring Selection</span>
+            </a>
+            <ul id="requirement" class="list-unstyled collapse {{ Request::segment(1) === 'hiring-external' || Request::segment(1) === 'hiring-internal' ? 'in' : '' }}">
+                <li>
+                    <a href="{{ route('hiring-external.index') }}" class="{{ Request::segment(1) === 'hiring-external' ? 'active' : '' }}">Step 1</a>
+                </li>
+                <li>
+                    <a href="{{ route('hiring-internal.index') }}" class="{{ Request::segment(1) === 'hiring-internal' ? 'active' : '' }}">Step 2</a>
+                </li>
+            </ul>
+        </li>
+        
         <li class="sidebar-category">Configuration</li>
         <li class="panel">
             <a href="{{ route('users.index') }}" class="{{ Request::segment(1) === 'users' ? 'active' : '' }}">
                 <i class="fa fa-users"></i><span class="sidebar-title">User</span>
-            </a>
-        </li>
-        <li class="panel">
-            <a href="{{ route('dashboard') }}" class="{{ Request::segment(1) === 'web-settings' ? 'active' : '' }}">
-                <i class="fa fa-cogs"></i><span class="sidebar-title">Web Setting</span>
             </a>
         </li>
         <li class="panel">

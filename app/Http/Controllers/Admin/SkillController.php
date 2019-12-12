@@ -8,8 +8,14 @@ use Session;
 use Validator;
 use App\Skill;
 use Yajra\Datatables\Datatables;
+use DB;
 class SkillController extends Controller
 {
+
+    public function index()
+    {
+      return view('admin.pages.skills.index');
+    }
 
     public function data($division_id)
     {
@@ -19,7 +25,7 @@ class SkillController extends Controller
         'skills.name',
         'skills.status',
         'skills.created_at',
-        'skills.updated_at'
+        'skills.updated_at',
       ])
       ->where('skills.division_id', '=', $division_id);
 
@@ -40,12 +46,12 @@ class SkillController extends Controller
         ->make(true);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function create()
+    {
+      $list_division     = DB::table('divisions')->where('divisions.status', '=', 1)->pluck('name', 'id');
+      return view('admin.pages.skills.create')->with(compact('list_division'));
+    }
+
     public function store(Request $request, $division_id)
     {
       $input = $request->all();
@@ -95,12 +101,6 @@ class SkillController extends Controller
       }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
       $data   = \App\Division::findOrFail($id);
@@ -108,12 +108,6 @@ class SkillController extends Controller
         ->with(compact('data'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($division_id, $id)
     {
       $data   = Skill::findOrFail($id);
@@ -121,13 +115,6 @@ class SkillController extends Controller
         ->with(compact('data'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $division_id, $id)
     {
       $input = $request->all();
@@ -169,12 +156,6 @@ class SkillController extends Controller
       }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
       $data = Skill::findOrFail($id);

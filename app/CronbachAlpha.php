@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CronbachAlpa extends Model
+class CronbachAlpha extends Model
 {
     //
 }

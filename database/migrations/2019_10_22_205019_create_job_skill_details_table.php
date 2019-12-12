@@ -18,7 +18,6 @@ class CreateJobSkillDetailsTable extends Migration
             $table->unsignedInteger('job_vacancy_id');
             $table->unsignedInteger('skill_id');
             $table->decimal('value', 12, 2)->unsigned()->default(0);
-            $table->tinyInteger('status')->unsigned()->default(0)->comment('0:inactive; 1:active;');
             $table->timestamps();
         });
     }
