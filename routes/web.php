@@ -171,8 +171,7 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
  * Customer SIDE
  * 
  */
-//Route::group(['namespace' => 'Customer', 'domain' => env('APP_URL')], function () {
-Route::group(['namespace' => 'Customer'], function() {
+Route::group(['namespace' => 'Customer', 'domain' => env('APP_URL')], function () {
     Route::get('/', [
         'uses' => 'PagesController@index',
         'as' => 'home_pages'
