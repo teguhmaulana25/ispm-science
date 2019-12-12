@@ -25,6 +25,7 @@
                     @csrf
                     <input type="hidden" name="job_vacancy_id" value="{{ $data->id_vacancy }}">
                     <input type="hidden" name="count_criteria" value="{{count($arr_criteria)}}">
+                    <input type="hidden" name="vacancy_name" value="{{ $data->title }}">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

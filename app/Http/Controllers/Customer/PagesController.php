@@ -17,6 +17,9 @@ use App\CandidateSkill;
 use Carbon\Carbon;
 use DB;
 
+use App\Mail\ActionEmail;
+use Illuminate\Support\Facades\Mail;
+
 class PagesController extends Controller
 {
     public function index() {
@@ -285,6 +288,13 @@ class PagesController extends Controller
           'address' => $request->input('address')
       ]);
       if ($data) {
+          // Send Email
+          $varEMail = [
+                        'type' => 'apply_finish',
+                        'name' => $request->input('name'),
+                        'vacancy_name' => $request->input('vacancy_name')
+                      ];
+          Mail::to($request->input('email'))->send(new ActionEmail($varEMail));
           for ($idx = 1; $idx <= $request->input('count_criteria'); $idx++) {
               CandidateDetail::create([
                 'candidate_id' => $data->id,
