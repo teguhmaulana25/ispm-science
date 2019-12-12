@@ -71,38 +71,38 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
         ]);
 
         // {domain_name}/skill/* routes
-        Route::resource('skills', 'SkillController');    
-        Route::get('/skills/datatables/get/data', [
-          'uses' => 'SkillController@data',
-          'as' => 'skills.data'
-        ]);
+        // Route::resource('skills', 'SkillController');    
+        // Route::get('/skills/datatables/get/data', [
+        //   'uses' => 'SkillController@data',
+        //   'as' => 'skills.data'
+        // ]);
 
-        // Route::group(['prefix' => 'skills'], function() {
-        //   Route::get('/datatables/get/data/{division_id}', [
-        //     'uses' => 'SkillController@data',
-        //     'as' => 'skills.data'
-        //   ]);
-        //   Route::get('/show/{division_id}', [
-        //     'uses' => 'SkillController@show',
-        //     'as' => 'skills.show'
-        //   ]);
-        //   Route::post('/store/{division_id}', [
-        //     'uses' => 'SkillController@store',
-        //     'as' => 'skills.store'
-        //   ]);
-        //   Route::get('/edit/{division_id}/{id}', [
-        //     'uses' => 'SkillController@edit',
-        //     'as' => 'skills.edit'
-        //   ]);
-        //   Route::put('/edit/{division_id}/{id}', [
-        //     'uses' => 'SkillController@update',
-        //     'as' => 'skills.update'
-        //   ]);
-        //   Route::delete('/destroy/{id}', [
-        //     'uses' => 'SkillController@destroy',
-        //     'as' => 'skills.destroy'
-        //   ]);
-        // });
+        Route::group(['prefix' => 'skills'], function() {
+          Route::get('/datatables/get/data/{division_id}', [
+            'uses' => 'SkillController@data',
+            'as' => 'skills.data'
+          ]);
+          Route::get('/show/{division_id}', [
+            'uses' => 'SkillController@show',
+            'as' => 'skills.show'
+          ]);
+          Route::post('/store/{division_id}', [
+            'uses' => 'SkillController@store',
+            'as' => 'skills.store'
+          ]);
+          Route::get('/edit/{division_id}/{id}', [
+            'uses' => 'SkillController@edit',
+            'as' => 'skills.edit'
+          ]);
+          Route::put('/edit/{division_id}/{id}', [
+            'uses' => 'SkillController@update',
+            'as' => 'skills.update'
+          ]);
+          Route::delete('/destroy/{id}', [
+            'uses' => 'SkillController@destroy',
+            'as' => 'skills.destroy'
+          ]);
+        });
 
         // {domain_name}/criterias/* routes
         Route::resource('criterias', 'CriteriaController');    

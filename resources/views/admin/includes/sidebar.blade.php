@@ -24,9 +24,6 @@
                     <a href="{{ route('divisions.index') }}" class="{{ Request::segment(1) === 'divisions' ? 'active' : '' }}">Division</a>
                 </li>
                 <li>
-                    <a href="{{ route('skills.index') }}" class="{{ Request::segment(1) === 'skills' ? 'active' : '' }}">Skill</a>
-                </li>
-                <li>
                     <a href="{{ route('criterias.index') }}" class="{{ Request::segment(1) === 'criterias' || Request::segment(1) === 'criteria-details'  ? 'active' : '' }}">Criteria</a>
                 </li>
             </ul>

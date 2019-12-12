@@ -73,7 +73,6 @@ class JobVacancyController extends Controller
       $start_date 		= Carbon\Carbon::parse($set_start_date)->toDateString();
 			$end_date 			= Carbon\Carbon::parse($set_end_date)->toDateString();
       $input = array(
-        'user_id' => Auth::user()->id,
         'division_id' => $request->input('division_id'),
         'title' => $request->input('title'),
         'description' => $request->input('description'),
@@ -96,6 +95,7 @@ class JobVacancyController extends Controller
         } else {
           $data = JobVacancy::create(
             [
+              'user_id' => Auth::user()->id,
               'division_id' => $request->input('division_id'),
               'title' => $request->input('title'),
               'description' => $request->input('description'),
@@ -165,7 +165,6 @@ class JobVacancyController extends Controller
       $start_date 		= Carbon\Carbon::parse($set_start_date)->toDateString();
 			$end_date 			= Carbon\Carbon::parse($set_end_date)->toDateString();
       $input_validate = array(
-        'user_id' => Auth::user()->id,
         'division_id' => $request->input('division_id'),
         'title' => $request->input('title'),
         'description' => $request->input('description'),
@@ -191,6 +190,7 @@ class JobVacancyController extends Controller
             $data = JobVacancy::findOrFail($id);
             $update = JobVacancy::where('id', $data->id)
               ->update([
+                'user_id' => Auth::user()->id,
                 'division_id' => $request->input('division_id'),
                 'title' => $request->input('title'),
                 'description' => $request->input('description'),

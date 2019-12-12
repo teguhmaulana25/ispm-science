@@ -35,8 +35,8 @@
     
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-5">
-                            <button type="submit" class="btn btn-sm btn-flat btn-primary" id="submit_save">
-                                <i class="fa fa-save"></i> Save
+                            <button type="submit" class="btn btn-sm btn-flat btn-primary">
+                                <i class="fa fa-search"></i> Search
                             </button>                                    
                         </div>
                     </div>

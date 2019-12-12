@@ -17,7 +17,7 @@ class SkillController extends Controller
       return view('admin.pages.skills.index');
     }
 
-    public function data()
+    public function data($division_id)
     {
       $data_master = Skill::select([
         'skills.id',
@@ -26,9 +26,8 @@ class SkillController extends Controller
         'skills.status',
         'skills.created_at',
         'skills.updated_at',
-        'divisions.name as division_name'
       ])
-      ->leftJoin('divisions', 'skills.division_id', '=', 'divisions.id');
+      ->where('skills.division_id', '=', $division_id);
 
       return Datatables::of($data_master)
         ->editColumn('status', function($data) {
@@ -36,7 +35,7 @@ class SkillController extends Controller
         })
         ->addColumn('action', function($data) {
             return '
-              <a href="' . route('skills.edit', [$data->id]) . '" class="btn btn-warning btn-block">
+              <a href="' . route('skills.edit', [$data->division_id, $data->id]) . '" class="btn btn-warning btn-block">
                 <span class="fas fa-edit fa-fw"></span> Edit
               </a>
               <button type="button" data-toggle="modal" data-target="#delete_form' . $data->id . '" class="btn btn-danger btn-block" onclick="deleteModal(' . "'" . route('skills.destroy', $data->id) . "','" . $data->id . "','" . $data->name . "','" . Session::token() . "'" . ')">
@@ -53,15 +52,14 @@ class SkillController extends Controller
       return view('admin.pages.skills.create')->with(compact('list_division'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $division_id)
     {
       $input = $request->all();
-      $rule_message 	= array(
-        'division_id.required' => 'The division field is required'
-      );
-      $validation     = Validator::make($input, Skill::$rules, $rule_message);
+      $validation = Validator::make($input, Skill::$rules);
       if ($validation->passes()) {
-          $checkExist = \App\Skill::where('division_id', $request->input('division'))
+        $checkDevision = \App\Division::where('id', $division_id)->count();
+        if ($checkDevision) {
+          $checkExist = \App\Skill::where('division_id', $division_id)
             ->where('name', '=', $request->input('name'))
             ->count();
           if ($checkExist > 0) {
@@ -72,7 +70,7 @@ class SkillController extends Controller
           } else {
             $data = Skill::create(
               [
-                'division_id' => $request->input('division_id'),
+                'division_id' => $division_id,
                 'name' => $request->input('name'),
                 'status' => $request->input('status')
               ]);
@@ -88,6 +86,12 @@ class SkillController extends Controller
                 ->with('error', $request->input('name') . ' failed to create.');    
             }
           }
+        } else {
+          return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'We have no database record with that data.');
+        }
       }else {
 
         return redirect()
@@ -104,20 +108,19 @@ class SkillController extends Controller
         ->with(compact('data'));
     }
 
-    public function edit($id)
+    public function edit($division_id, $id)
     {
       $data   = Skill::findOrFail($id);
-      $list_division     = DB::table('divisions')->where('divisions.status', '=', 1)->pluck('name', 'id');
       return view('admin.pages.skills.edit')
-        ->with(compact('data', 'list_division'));
+        ->with(compact('data'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $division_id, $id)
     {
       $input = $request->all();
       $validation = Validator::make($request->all(), Skill::rule_edit($id));
       if ($validation->passes()) {
-        $checkExist = \App\Skill::where('division_id', $request->input('division_id'))
+        $checkExist = \App\Skill::where('division_id', $division_id)
             ->where('name', '=', $request->input('name'))
             ->where('id', '!=', $id)
             ->count();
@@ -130,13 +133,12 @@ class SkillController extends Controller
           $data = Skill::findOrFail($id);
           $update = Skill::where('id', $data->id)
             ->update([
-              'division_id' => $request->input('division_id'),
               'name' => $request->input('name'),
               'status' => $request->input('status')
             ]);
           if ($update) {
             return redirect()
-              ->route('skills.index')
+              ->route('skills.show', $division_id)
               ->with('info', $request->input('title') . ' has been updated.');
           } else {
             return redirect()

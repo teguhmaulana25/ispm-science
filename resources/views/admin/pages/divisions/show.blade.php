@@ -4,9 +4,9 @@
     <a href="{{ route('divisions.index') }}" class="btn btn-success btn-xs">
         <i class="fa fa-arrow-circle-left"></i> Back
     </a>
-    {{-- <a href="{{ route('skills.show', $data->id) }}" class="btn btn-success btn-xs">
+    <a href="{{ route('skills.show', $data->id) }}" class="btn btn-success btn-xs">
         <i class="fa fa-eye"></i> View Data Skill
-    </a> --}}
+    </a>
 @endsection
 @section('breadcrumb')
 	<li><a href="{{ route('divisions.index') }}">Division</a></li>

@@ -170,7 +170,6 @@ class PagesController extends Controller
 
                             ->join('job_vacancy_details', 'job_vacancies.id' , '=', 'job_vacancy_details.job_vacancy_id')
                             ->where('job_vacancies.display', 1)
-                            ->where('job_vacancy_details.status', 1)
                             ->where('job_vacancies.start_date', '<=', Carbon::now())
                             ->where('job_vacancies.end_date', '>=', Carbon::now())
                             ->count();
@@ -185,7 +184,6 @@ class PagesController extends Controller
                 )
                 ->join('criteria_details', 'job_vacancy_details.criteria_detail_id' , '=', 'criteria_details.id')
                 ->join('criterias', 'criteria_details.criteria_id' , '=', 'criterias.id')
-                ->where('job_vacancy_details.status', 1)
                 ->where('criterias.status', 1)
                 ->where('criteria_details.id', $id_criteria_detail)
                 ->first();
@@ -221,7 +219,6 @@ class PagesController extends Controller
                   ]
                 )
                 ->join('skills', 'job_skill_details.skill_id' , '=', 'skills.id')
-                ->where('job_skill_details.status', 1)
                 ->where('skills.division_id', $id_div)
                 ->where('job_skill_details.job_vacancy_id', $id_vacation)
                 ->get();

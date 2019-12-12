@@ -63,7 +63,7 @@ class DivisionController extends Controller
           ]);
         if ($data) {
           return redirect()
-            ->back()
+            ->route('skills.show', $data->id)
             ->with('info', $request->input('name') . ' has been created.');
         } else {
           return redirect()

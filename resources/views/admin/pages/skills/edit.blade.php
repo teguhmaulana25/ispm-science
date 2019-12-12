@@ -19,25 +19,13 @@
 		<div class="widget">
 			<!-- /.widget-header -->
 			<div class="widget-body">
-                <form action="{{ route('skills.update', $data->id) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
+                <form action="{{ route('skills.update', [$data->division_id, $data->id]) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
                     @csrf
     
-                    <div class="form-group {{ $errors->has('division_id') ? 'has-error' : '' }}">
-                        <label class="control-label col-md-2">Division</label>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Divison Name</label>
                         <div class="col-md-5">
-                            <select name="division_id" id="division_id" class="form-control" required>
-                                <option value="">- select division -</option>
-                                @foreach($list_division as $key => $value)
-                                    <option value="{{ $key }}" @if($key == $data->division_id) selected @endif>
-                                        {{ $value}}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @if ($errors->has('division_id'))
-                                <span class="help-block">
-                                    {{ $errors->first('division_id') }}
-                                </span>
-                            @endif
+                            <p class="form-control-static">{{ $data->division->name }}</p>
                         </div>
                     </div>
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }} name">
