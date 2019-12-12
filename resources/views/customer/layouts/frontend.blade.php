@@ -36,6 +36,7 @@
 <script type="text/javascript" src="{{ asset('js/jquery-2.2.4.min.js') }}"></script>
 <!-- Bootstrap -->
 <script type="text/javascript" src="{{ asset('plugins/bootstrap_4/js/bootstrap.min.js') }}"></script>
+@stack('scripts')
 <script type="text/javascript">
     //    top scroll
     $(".top_scroll").on('click', function () {
