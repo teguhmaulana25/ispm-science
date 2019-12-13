@@ -14,27 +14,20 @@
                 <form action="{{ route('hiring-external.filter') }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
                     @csrf
 
-                    <div class="form-group {{ $errors->has('division_id') ? 'has-error' : '' }}">
-                        <label class="control-label col-md-2">Division</label>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Date Range of Interview</label>
                         <div class="col-md-5">
-                            <select name="division_id" id="division_id" class="form-control" autofocus required>
-                                <option value="">- select division -</option>
-                                @foreach($list_division as $key => $value)
-                                    <option value="{{ $key }}">
-                                        {{ $value}}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @if ($errors->has('division_id'))
-                                <span class="help-block">
-                                    {{ $errors->first('division_id') }}
-                                </span>
-                            @endif
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" name="date_range" class="form-control" id="date_range" value=""/>
+                            </div>
                         </div>
                     </div>
     
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-5">
+                        <div class="col-md-offset-3 col-md-5">
                             <button type="submit" class="btn btn-sm btn-flat btn-primary">
                                 <i class="fa fa-search"></i> Search
                             </button>                                    
@@ -49,13 +42,29 @@
 @endsection
 
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <!-- Daterange -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}" type="text/javascript"></script>
+    <!-- Daterange -->
+    <script src="{{ asset('plugins/daterangepicker/moment.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>   
     <script type="text/javascript">
-        $("#division_id").select2();
+        $('#date_range').daterangepicker({
+			autoApply: true,
+			ranges: {
+			    Today: [moment(), moment()],
+			    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+			    "Last 7 Days": [moment().subtract(6, "days"), moment()],
+			    "Last 30 Days": [moment().subtract(29, "days"), moment()],
+			    "This Month": [moment().startOf("month"), moment().endOf("month")],
+			    "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+			},
+			// startDate: moment().subtract(29, "days"),
+            startDate: moment().startOf("month"),
+			endDate: moment().endOf("month")
+		});
     </script>
 
 @endpush
