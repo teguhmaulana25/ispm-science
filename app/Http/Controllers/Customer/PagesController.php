@@ -17,6 +17,9 @@ use App\CandidateSkill;
 use Carbon\Carbon;
 use DB;
 
+use App\Mail\ActionEmail;
+use Illuminate\Support\Facades\Mail;
+
 class PagesController extends Controller
 {
     public function index() {
@@ -86,19 +89,31 @@ class PagesController extends Controller
       }
       $get_vacancy = JobVacancyDetail::select(
                         [
-                          'job_vacancy_details.criteria_detail_id'
+                          'job_vacancy_details.job_vacancy_id',
+                          'job_vacancy_details.criteria_detail_id',
+                          'criterias.step'
                         ]
                       )
+                      ->join('criteria_details', 'job_vacancy_details.criteria_detail_id' , '=', 'criteria_details.id')
+                      ->join('criterias', 'criteria_details.criteria_id' , '=', 'criterias.id')
+                      ->where('criterias.status', 1)
+                      ->where('criterias.step', '1')
                       ->where('job_vacancy_details.job_vacancy_id', $data->id_vacancy)
                       ->get();
 
       $arr_criteria = [];
-      foreach ($get_vacancy as $r) {
-        $arr_criteria[] = [
+      foreach ($get_vacancy as $key => $r) {
+        $arr_criteria[$key] = [
                             'criteria_id' => $this->getCriterias($r->criteria_detail_id)->id,
+                            'criteria_status' => $r->step,
                             'criteria_name' => $this->getCriterias($r->criteria_detail_id)->name,
-                            'criteria_data' => $this->getCriteriaDetails($this->getCriterias($r->criteria_detail_id)->id)
+                            'criteria_data' => $this->getCriteriaDetails($this->getCriterias($r->criteria_detail_id)->id, $r->job_vacancy_id)
                           ];
+      }
+      // Remove duplicate
+      if(!empty($arr_criteria)){
+        $arr_x = $this->super_unique($arr_criteria,'criteria_id');
+        $arr_criteria = $arr_x;
       }
 
       $arr_skill =  [
@@ -107,6 +122,18 @@ class PagesController extends Controller
 
       return view('customer.pages.apply')
           ->with(compact('data','arr_criteria','arr_skill'));
+    }
+
+    private function super_unique($array,$key)
+    {
+       $temp_array = [];
+       foreach ($array as &$v) {
+           if (!isset($temp_array[$v[$key]]))
+           $temp_array[$v[$key]] =& $v;
+       }
+       $array = array_values($temp_array);
+       return $array;
+
     }
 
     private function getAvailableDiv($get_id, $type, $get_id_vc = null) {
@@ -123,8 +150,8 @@ class PagesController extends Controller
                       ->where('job_vacancies.display', 1)
                       ->where('job_vacancies.start_date', '<=', Carbon::now())
                       ->where('job_vacancies.end_date', '>=', Carbon::now());
-      if($type == 'first') {
 
+      if($type == 'first') {
         $get_vacancy = $get_vacancy->where('job_vacancies.id', $get_id_vc)->first();
         if(!empty($get_vacancy)) {
           $data_arr = [
@@ -185,28 +212,36 @@ class PagesController extends Controller
                 ->join('criteria_details', 'job_vacancy_details.criteria_detail_id' , '=', 'criteria_details.id')
                 ->join('criterias', 'criteria_details.criteria_id' , '=', 'criterias.id')
                 ->where('criterias.status', 1)
+                ->where('criterias.step', 1)
                 ->where('criteria_details.id', $id_criteria_detail)
                 ->first();
 
       return $getCriteria_;
     }
-    private function getCriteriaDetails($id_criteria) {
-      $getCriteriaDetail_ = CriteriaDetail::select(
-                  [
-                    'criteria_details.id',
-                    'criteria_details.name',
-                    'criteria_details.value'
-                  ]
-                )
-                ->where('criteria_details.criteria_id', $id_criteria)
-                ->get();
+    private function getCriteriaDetails($id_criteria, $id_vacanyDetail) {
       $arr_data = [];
-      foreach ($getCriteriaDetail_ as $v) {
-        $arr_data[] = [
-                        'id' => $v->id,
-                        'name' => $v->name,
-                        'value' => $v->value,
-                      ];
+      if(!empty($id_criteria) && !empty($id_vacanyDetail)) {
+        $getCriteriaDetail_ = CriteriaDetail::select(
+                    [
+                      'criteria_details.id',
+                      'criteria_details.name',
+                      'criteria_details.value'
+                    ]
+                  )
+                  ->join('job_vacancy_details', 'criteria_details.id' , '=', 'job_vacancy_details.criteria_detail_id')
+                  ->join('criterias', 'criteria_details.criteria_id' , '=', 'criterias.id')
+                  ->where('criterias.step', 1)
+                  ->where('criterias.id', $id_criteria)
+                  ->where('job_vacancy_details.job_vacancy_id', $id_vacanyDetail)
+                  ->get();
+        
+        foreach ($getCriteriaDetail_ as $v) {
+          $arr_data[] = [
+                          'id' => $v->id,
+                          'name' => $v->name,
+                          'value' => $v->value,
+                        ];
+        }
       }
       return $arr_data;
     }
@@ -253,6 +288,13 @@ class PagesController extends Controller
           'address' => $request->input('address')
       ]);
       if ($data) {
+          // Send Email
+          $varEMail = [
+                        'type' => 'apply_finish',
+                        'name' => $request->input('name'),
+                        'vacancy_name' => $request->input('vacancy_name')
+                      ];
+          Mail::to($request->input('email'))->send(new ActionEmail($varEMail));
           for ($idx = 1; $idx <= $request->input('count_criteria'); $idx++) {
               CandidateDetail::create([
                 'candidate_id' => $data->id,
@@ -260,14 +302,15 @@ class PagesController extends Controller
                 'answer' => explode("_", $request->input('question_criteria_'.$idx)[0])[1]
               ]);
           }
-          foreach ($request->input('question_skills') as $arrSkill) {
-            CandidateSkill::create([
-                'candidate_id' => $data->id,
-                'skill_id' => explode("_", $arrSkill)[0],
-                'answer' => explode("_", $arrSkill)[1]
-              ]);
+          if(!empty($request->input('question_skills'))){
+            foreach ($request->input('question_skills') as $arrSkill) {
+              CandidateSkill::create([
+                  'candidate_id' => $data->id,
+                  'skill_id' => explode("_", $arrSkill)[0],
+                  'answer' => explode("_", $arrSkill)[1]
+                ]);
+            }
           }
-          //return view('customer.pages.finish')
           return redirect()->route('apply_vacancy_finish');
       }else{
           return redirect()
