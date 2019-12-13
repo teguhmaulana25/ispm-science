@@ -37,7 +37,16 @@ class ActionEmail extends Mailable
                         'name' => $this->var['name'],
                         'vacancy_name' => $this->var['vacancy_name'],
                     ]);
-    	}
+    	} elseif($this->var['type'] == "interview_email"){
+            return $this->from('igfauzi1@gmail.com')
+                   ->view('mails.interviewEmail')
+                   ->with(
+                    [
+                        'name' => $this->var['name'],
+                        'date' => $this->var['date'],
+                        'address' => "Ruko Jalan Kartini Raya No. 53 Pancoran Mas, Depok 16436 <br> Telp: (021) 7720-7657",
+                    ]);
+        }
        	
     }
 }
