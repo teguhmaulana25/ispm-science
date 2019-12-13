@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Portfolio - Responsive Email Template</title>
+    <title>Email finish form</title>
     <style type="text/css">
       /* ----- Custom Font Import ----- */
       @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
