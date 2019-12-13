@@ -19,7 +19,23 @@ class HiringExternalController extends Controller
 
     public function filter(Request $request)
     {
-      if ($request->input('division_id')) {
+      if ($request->input('date_range')) {
+        $set_start_date 		= explode(' - ',$request->input('date_range'))[0];
+        $set_end_date 			= explode(' - ',$request->input('date_range'))[1];
+        $start_date 		= Carbon\Carbon::parse($set_start_date)->toDateString();
+        $end_date 			= Carbon\Carbon::parse($set_end_date)->toDateString();
+        if ($start_date && $end_date) {
+          // $getCandidate = Candidate::select([
+
+          // ])
+          // ->where('candidae')
+        } else {
+          return redirect()
+            ->back()
+            ->withInput()
+            ->withErrors($validation->errors())
+            ->with('error', 'Please select data');
+        }
         // $getCandidate = Candidate::select([
           
         // ])->where(function ($query) use ($subject_id) {
@@ -34,7 +50,7 @@ class HiringExternalController extends Controller
           ->back()
           ->withInput()
           ->withErrors($validation->errors())
-          ->with('error', 'Please select division');
+          ->with('error', 'Please select data');
       }
     }
 }
