@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Email finish form</title>
+    <title>Email interview</title>
     <style type="text/css">
       /* ----- Custom Font Import ----- */
       @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
@@ -69,12 +69,10 @@
                 <!-- /// Header -->
                 <!-- / Hero subheader -->
                 <table class="container hero-subheader" border="0" cellpadding="0" cellspacing="0" width="620" style="width: 620px;">
-                  <tbody><tr>
-                    <td class="hero-subheader__title" style="font-size: 33px;font-weight: bold;padding: 70px 10px 40px 10px;text-align: center;color: #58d2f5;" align="left">Thank you {{ $name }} for your interest in applying for the {{ $vacancy_name }} job in our company</td>
-                  </tr>
-
+                  <tbody>
                   <tr>
-                    <td class="hero-subheader__content" style="font-size: 20px;line-height: 27px;color: #969696;padding: 20px 25px 60px 25px;text-align: center;" align="left">We will check your application and notify you again, if you are selected, good luck.</td>
+                    <td class="hero-subheader__content" style="font-size: 20px;line-height: 27px;color: #969696;padding: 40px 25px 60px 25px;text-align: left;" align="left">Dear {{ $name }},<br><br>We from DUMET School invite you to take part in the interview process. <br><br>
+                      <strong>Information:</strong><br>Address: {!! $address !!} <br>Date: {{ $date }}</td>
                   </tr>
                 </tbody></table>
                 <!-- /// Hero subheader -->

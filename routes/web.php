@@ -163,6 +163,21 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
           'as' => 'candidates.data'
         ]);
 
+        Route::group(['prefix' => 'candidates'], function() {
+          Route::get('/', [
+            'uses' => 'CandidateController@index',
+            'as' => 'candidates.index'
+          ]);
+          Route::post('/show', [
+            'uses' => 'CandidateController@show',
+            'as' => 'candidates.show'
+          ]);
+          Route::post('/save-int', [
+            'uses' => 'CandidateController@saveIntv',
+            'as' => 'candidates.saveIntv'
+          ]);
+        });
+
         // {domain_name}/hiring/* routes
         Route::group(['prefix' => 'hiring'], function() {
           Route::get('/', [
