@@ -25,4 +25,8 @@ class Criteria extends Model
             'step' => 'required',
         ];
     }
+
+    public function criteriaDetail() {
+        return $this->hasMany('App\CriteriaDetail');
+    }
 }

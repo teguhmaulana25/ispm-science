@@ -27,4 +27,5 @@ class CriteriaDetail extends Model
     {
         return $this->belongsTo(Criteria::class ,'criteria_id');
     }
+    
 }

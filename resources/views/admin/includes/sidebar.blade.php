@@ -40,15 +40,15 @@
         </li>
         <li class="panel">
             <a role="button" data-toggle="collapse" data-parent=".navigation" href="#requirement" aria-expanded="false" aria-controls="collapse1"
-            class="bubble collapsed {{ Request::segment(1) === 'hiring-external' || Request::segment(1) === 'hiring-internal' ? 'active' : '' }}">
-                <i class="fa fa-sitemap"></i><span class="sidebar-title">Hiring Selection</span>
+            class="bubble collapsed {{ Request::segment(1) === 'hiring' || Request::segment(1) === 'hiring' ? 'active' : '' }}">
+                <i class="fa fa-sitemap"></i><span class="sidebar-title">Hiring</span>
             </a>
-            <ul id="requirement" class="list-unstyled collapse {{ Request::segment(1) === 'hiring-external' || Request::segment(1) === 'hiring-internal' ? 'in' : '' }}">
+            <ul id="requirement" class="list-unstyled collapse {{ Request::segment(1) === 'hiring-external' || Request::segment(1) === 'hiring' ? 'in' : '' }}">
                 <li>
-                    <a href="{{ route('hiring-external.index') }}" class="{{ Request::segment(1) === 'hiring-external' ? 'active' : '' }}">Step 1</a>
+                    <a href="{{ route('hiring.index') }}" class="{{ Request::segment(1) === 'hiring' ? 'active' : '' }}">Interview & Test</a>
                 </li>
                 <li>
-                    <a href="{{ route('hiring-internal.index') }}" class="{{ Request::segment(1) === 'hiring-internal' ? 'active' : '' }}">Step 2</a>
+                    <a href="{{ route('hiring.index') }}" class="{{ Request::segment(1) === 'hiring' ? 'active' : '' }}">Onboarding</a>
                 </li>
             </ul>
         </li>
