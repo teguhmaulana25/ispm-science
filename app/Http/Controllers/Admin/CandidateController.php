@@ -69,8 +69,8 @@ class CandidateController extends Controller
                   ])
                 ->where('division_id', $id)
                 ->join('candidates', 'job_vacancies.id' , '=', 'candidates.job_vacancy_id')
-                ->orderBy('candidates.created_at', 'desc')
                 ->where('candidates.interview_date', null)
+                ->orderBy('candidates.value', 'DESC')
                 ->get();
         if(!empty($data)) {
             $list = [];
@@ -139,7 +139,7 @@ class CandidateController extends Controller
                         'cronbach_alphas.max'
                     ])
                 ->get();
-        $rt_val = "";
+        $rt_val = "-";
         if($type == 1) { // Return label
             foreach ($data as  $v) {
                 if( ($value >= $v->min) && ($value < $v->max) ){
