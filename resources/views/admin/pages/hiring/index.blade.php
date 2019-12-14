@@ -1,9 +1,9 @@
 @extends('admin.layouts.admin')
-@section('title')Hiring - Curriculum Vitae @endsection
+@section('title')Hiring - Interview & Test @endsection
 @section('add')
 @endsection
 @section('breadcrumb')
-	<li class="active"><a>Curriculum Vitae</a></li>
+	<li class="active"><a>Interview & Test</a></li>
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
 	<div class="col-xs-12">
 		<div class="widget">
 			<div class="widget-body">
-                <form action="{{ route('hiring-external.filter') }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
+                <form action="{{ route('hiring.filter') }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
                     @csrf
 
                     <div class="form-group">

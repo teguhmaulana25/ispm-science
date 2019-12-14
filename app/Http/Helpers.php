@@ -209,6 +209,54 @@ function get_criteria_list($code) {
 	return $output;
 }
 
+function get_criteria_list_hiring($code) {
+	$output     = DB::table('criteria_details')
+		->select([
+			'criteria_details.id',
+			'criteria_details.name',
+			'criteria_details.value',
+		])
+		->where('criteria_details.criteria_id', '=', $code)
+		->get();
+	return $output;
+}
+
+function get_division($code)
+{
+	$output     = DB::table('divisions')
+					->select([
+						'divisions.name',
+					])
+					->where('divisions.id', '=', $code)
+					->first();
+	if(!empty($output))
+	{
+		return $output->name;
+	}else{
+		return 'Not Found';
+	}
+}
+
+function check_skill_user($candidate_id, $skill_id, $label = true)
+{
+	$checkSkill = DB::table('candidate_skills')
+		->where('candidate_skills.candidate_id', '=', $candidate_id)
+		->where('candidate_skills.skill_id', $skill_id)
+		->count();
+	if ($checkSkill > 0) {
+		$string = "Yes";
+		$label_type = "success";
+	} else {
+		$string = "No";
+		$label_type = "danger";		
+	}
+
+	if ($label == true) {
+		$string = "<small class='label label-" . $label_type . "'>" . $string . "</small>";
+	}
+
+	return $string;
+}
 
 
 ?>

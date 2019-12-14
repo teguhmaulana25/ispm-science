@@ -108,14 +108,13 @@
                                         <td>{{ get_criteria_parent($item->criteria_detail_id) }}</td>
                                         <td>
                                             <select name="data[job_criteria][{{ $key }}][id]" class="form-control job_criteria_select" required>
-                                                <option value="" data-id="{{ $key }}">- select kriteria -</option>
-                                                @foreach(get_criteria_list($item->criteria_detail_id) as $key_detail => $value_detail)
-                                                    <option value="{{ $value_detail->id }}" data-id="{{ $key }}" data-value="{{ $value_detail->value }}" 
-                                                        @if($value_detail->id == $item->criteria_detail_id) selected @endif>
+                                                <option value="" data-id="{{ $key }}">- select criteria -</option>
+                                                @foreach(get_criteria_list($item->id) as $key_detail => $value_detail)
+                                                <option value="{{ $value_detail->id }}" data-id="{{ $key }}" data-value="{{ $value_detail->value }}">
                                                         {{ $value_detail->name }}
                                                     </option>
                                                 @endforeach
-                                            </select>                                                    
+                                            </select>                                                   
                                         </td>
                                         <td class="text-center">
                                             <input type="hidden" id="job_criteria_value{{ $key }}" name="data[job_criteria][{{ $key }}][value]" value="@if($item->value) {{ $item->value }} @endif" >

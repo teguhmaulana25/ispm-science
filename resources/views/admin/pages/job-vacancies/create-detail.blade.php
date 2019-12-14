@@ -76,7 +76,7 @@
                                                     <td>{{ $item->name }}</td>
                                                     <td>
                                                         <select name="data[job_criteria][{{ $key }}][id]" class="form-control job_criteria_select" required>
-                                                            <option value="" data-id="{{ $key }}">- select kriteria -</option>
+                                                            <option value="" data-id="{{ $key }}">- select criteria -</option>
                                                             @foreach(get_criteria_detail($item->id) as $key_detail => $value_detail)
                                                             <option value="{{ $value_detail->id }}" data-id="{{ $key }}" data-value="{{ $value_detail->value }}">
                                                                     {{ $value_detail->name }}
