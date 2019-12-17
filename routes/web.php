@@ -198,15 +198,15 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
           ]);
         });
 
-        // {domain_name}/hiring-internal/* routes
-        Route::group(['prefix' => 'hiring-internal'], function() {
+        // {domain_name}/onboarding/* routes
+        Route::group(['prefix' => 'onboarding'], function() {
           Route::get('/', [
-            'uses' => 'HiringInternalController@index',
-            'as' => 'hiring-internal.index'
+            'uses' => 'OnboardingController@index',
+            'as' => 'onboarding.index'
           ]);
           Route::post('/', [
-            'uses' => 'HiringInternalController@filter',
-            'as' => 'hiring-internal.filter'
+            'uses' => 'OnboardingController@filter',
+            'as' => 'onboarding.filter'
           ]);
         });
 

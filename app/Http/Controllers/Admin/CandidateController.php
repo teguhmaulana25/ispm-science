@@ -115,12 +115,12 @@ class CandidateController extends Controller
                                                         'interview_date' => $request->get('interview_date'),
                                                         'cronbach_alpha_id' => $this->getCronbach($v, 2)
                                                     ]);
-                Mail::to($this->getCandidate($v)->email)->send(new ActionEmail(
-                        [
-                            'type' => 'interview_email',
-                            'name' => $this->getCandidate($v)->name,
-                            'date' => \Carbon\Carbon::parse($request->get('interview_date'))->format('l, j F Y \\a\\t h:i:s A'),
-                        ]));
+                // Mail::to($this->getCandidate($v)->email)->send(new ActionEmail(
+                //         [
+                //             'type' => 'interview_email',
+                //             'name' => $this->getCandidate($v)->name,
+                //             'date' => \Carbon\Carbon::parse($request->get('interview_date'))->format('l, j F Y \\a\\t h:i:s A'),
+                //         ]));
             }
         }
         return response()->json([

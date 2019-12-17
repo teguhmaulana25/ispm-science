@@ -40,15 +40,15 @@
         </li>
         <li class="panel">
             <a role="button" data-toggle="collapse" data-parent=".navigation" href="#requirement" aria-expanded="false" aria-controls="collapse1"
-            class="bubble collapsed {{ Request::segment(1) === 'hiring' || Request::segment(1) === 'hiring' ? 'active' : '' }}">
+            class="bubble collapsed {{ Request::segment(1) === 'hiring' || Request::segment(1) === 'onboarding' ? 'active' : '' }}">
                 <i class="fa fa-sitemap"></i><span class="sidebar-title">Hiring</span>
             </a>
-            <ul id="requirement" class="list-unstyled collapse {{ Request::segment(1) === 'hiring-external' || Request::segment(1) === 'hiring' ? 'in' : '' }}">
+            <ul id="requirement" class="list-unstyled collapse {{ Request::segment(1) === 'hiring' || Request::segment(1) === 'onboarding' ? 'in' : '' }}">
                 <li>
                     <a href="{{ route('hiring.index') }}" class="{{ Request::segment(1) === 'hiring' ? 'active' : '' }}">Interview & Test</a>
                 </li>
                 <li>
-                    <a href="{{ route('hiring.index') }}" class="{{ Request::segment(1) === 'hiring' ? 'active' : '' }}">Onboarding</a>
+                    <a href="{{ route('onboarding.index') }}" class="{{ Request::segment(1) === 'onboarding' ? 'active' : '' }}">Onboarding</a>
                 </li>
             </ul>
         </li>
