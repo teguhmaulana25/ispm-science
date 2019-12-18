@@ -34,6 +34,7 @@
 </body>
 <!-- jQuery 2.2.3 -->
 <script type="text/javascript" src="{{ asset('js/jquery-2.2.4.min.js') }}"></script>
+@stack('script-top')
 <!-- Bootstrap -->
 <script type="text/javascript" src="{{ asset('plugins/bootstrap_4/js/bootstrap.min.js') }}"></script>
 @stack('scripts')

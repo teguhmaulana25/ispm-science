@@ -451,6 +451,59 @@ a.navbar-brand img {
 .row-form-apply form label, .box-questions h3.main_question {
     font-weight: bolder !important;
 }
+#form-apply .rqd {
+    color: #ff6b6b;
+    font-size: 20px;
+    position: absolute;
+    margin-top: -4px;
+    margin-left: 4px;
+    font-style: normal;
+}
+.box-photo-upload {
+    padding: .25rem;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    width: 100%;
+    font-size: 14px;
+    height: 180px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+.box-photo-upload.img-upload {
+    height: auto;
+    max-height: 250px;
+}
+.opt-image-edit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 3px 3px 8px 8px;
+    border-radius: 0px 0px 0px 20px;
+    box-shadow: rgba(0, 0, 0, 0.45) -6px 6px 7px -9px;
+    cursor: pointer;
+}
+.opt-image-edit img {
+    width: 18px;
+}
+.opt-info {
+    position: absolute;
+    top: 3px;
+    right: 16px;
+}
+.box-photo-upload.on_dragging {
+    background-color: #f6f6f6;
+    border-style: dashed;
+    border-color: #b5b5b5;
+    box-shadow: rgba(152, 152, 152, 0.31) 0 0 15px -5px;
+}
+.img-input-hidden {
+    position: absolute;
+    visibility: hidden;
+    z-index: 0;
+}
 .box-questions .form-group label {
     font-weight: normal !important;
 }
@@ -465,10 +518,10 @@ a.navbar-brand img {
     font-size: 16px;
     position: relative;
 }
-.box-questions h3.main_question:after {
+/*.box-questions h3.main_question:after {
     content: ' : ';
     font-weight: bolder;
-}
+}*/
 .box-questions .form-group {
     position: relative;
 }
@@ -737,6 +790,10 @@ ul.footer-social li a i:hover {
         text-align: center;
         margin-bottom: 20px;
         padding-left: 0px;
+    }
+    .content-page-wrap {
+        padding-left: 15px;
+        padding-right: 15px;
     }
     .content-page-wrap h1 {
         padding: 0px 15px;

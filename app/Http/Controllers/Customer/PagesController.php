@@ -20,6 +20,9 @@ use DB;
 use App\Mail\ActionEmail;
 use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManager;
+
 class PagesController extends Controller
 {
     public function index() {
@@ -267,6 +270,7 @@ class PagesController extends Controller
 
     public function store(Request $request)
     {
+
       $input = $request->all();
       $checkAvaiable = Candidate::where('candidates.job_vacancy_id', $request->input('job_vacancy_id'))
                           ->where('candidates.email', $request->input('email'))
@@ -282,16 +286,52 @@ class PagesController extends Controller
           'birth_date' => $request->input('birth_date'),
           'email' => $request->input('email'),
           'phone' => $request->input('phone'),
-          'address' => $request->input('address')
+          'address' => $request->input('address'),
+          'gender' => $request->input('gender'),
+          'height' => $request->input('height'),
+          'weight' => $request->input('weight'),
+          'religion' => $request->input('religion'),
+          'blood_type' => $request->input('blood_type'),
+          'nationality' => $request->input('nationality'),
+          'ktp' => $request->input('ktp'),
+          'social_media' => $request->input('social_media')
       ]);
       if ($data) {
+          // Upload Photo
+          $allowed_filename = $data->photo;
+          if ($request->file('photo') != null) {
+            $folder_new = 'img/candidates/' ;
+            if (!file_exists($folder_new)) {
+                $CreateFolder = File::makeDirectory($folder_new);   
+            }
+            $path           = 'img/candidates/';
+            $image          = $request->file('photo'); // set images data
+            $originalName   = $image->getClientOriginalName(); // get images data
+            $extension      = $image->getClientOriginalExtension();
+            $allowed_filename = date('ymdhis').'-'.$data->id.'.'.$image->getClientOriginalExtension();
+
+            $path_to_save = $allowed_filename;
+
+            $manager = new ImageManager();
+            $manager->make($image)->save($path.$allowed_filename); // upload original image
+
+        }else{
+            $path_to_save = '';
+        }
+
+        DB::table('candidates')
+        ->where('id', $data->id)
+        ->update([
+            'photo' => $path_to_save
+        ]);
+
           // Send Email
           $varEMail = [
                         'type' => 'apply_finish',
                         'name' => $request->input('name'),
                         'vacancy_name' => $request->input('vacancy_name')
                       ];
-          // Mail::to($request->input('email'))->send(new ActionEmail($varEMail));
+          Mail::to($request->input('email'))->send(new ActionEmail($varEMail));
           for ($idx = 1; $idx <= $request->input('count_criteria'); $idx++) {
               CandidateDetail::create([
                 'candidate_id' => $data->id,
