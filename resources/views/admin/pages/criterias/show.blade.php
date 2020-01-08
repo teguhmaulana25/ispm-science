@@ -47,7 +47,8 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-striped table-bordered table-list-product table-view  mg-top20">
+                    <h4>Criteria Detail List</h4>
+                    <table class="table table-striped table-bordered table-list-product table-view ">
                         <thead>
                             <tr>
                                 <th class="text-center">Name</th>

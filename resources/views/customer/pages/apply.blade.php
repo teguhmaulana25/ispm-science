@@ -275,117 +275,117 @@
                 }
             });
 
-                $(".ch").rules("add", { 
-                    required:true
-                });
-                $('#photo').rules('add', {
-                    required: true,
-                    accept: "image/jpeg, image/gif, image/png"
-                });
-                $('#form-apply').submit();
-                $('#fullname').focus();
+            $(".ch").rules("add", { 
+                required:true
+            });
+            $('#photo').rules('add', {
+                required: true,
+                accept: "image/jpeg, image/gif, image/png"
+            });
+            $('#form-apply').submit();
+            $('#fullname').focus();
+            // $('#form_submit_btn').prop('disabled', 'disabled');
+        });
+
+        $('input').on('change keyup paste input blur focus', function() {
+            if ($("#form-apply").valid()) {
+                $('#form_submit_btn').prop('disabled', false);  
+            } else {
                 $('#form_submit_btn').prop('disabled', 'disabled');
-            });
-
-            $('input').on('change keyup paste input blur focus', function() {
-                if ($("#form-apply").valid()) {
-                    $('#form_submit_btn').prop('disabled', false);  
-                } else {
-                    $('#form_submit_btn').prop('disabled', 'disabled');
-                }
-            });
-            $('#address').bind('change keyup paste input blur focus propertychange', function() {
-                if ($("#form-apply").valid()) {
-                    $('#form_submit_btn').prop('disabled', false);  
-                } else {
-                    $('#form_submit_btn').prop('disabled', 'disabled');
-                }
-            });
-
-            $(".photo_upload").on("dragover", function(event) {
-                event.preventDefault();  
-                event.stopPropagation();
-                $(this).addClass('on_dragging');
-                $('.tx-drag-drop').text('Drop image here.');
-            });
-
-            $(".photo_upload").on("dragleave", function(event) {
-                event.preventDefault();  
-                event.stopPropagation();
-                $(this).removeClass('on_dragging');
-                $('.tx-drag-drop').html('<span class="d-block w-100 tx-drag-drop"><a href="javascript:void(0);" onclick="searchImageFile(this);">Upload a file</a> or drag and drop here</span>');
-            });
-
-            function dropHandler(ev) {
-                ev.preventDefault();  
-                //ev.stopPropagation();
-                $('.photo_upload').removeClass('on_dragging');
-                $('.tx-drag-drop').html('<span class="d-block w-100 tx-drag-drop"><a href="javascript:void(0);" onclick="searchImageFile(this);">Upload a file</a> or drag and drop here</span>');
-                if (ev.dataTransfer.items && ev.dataTransfer.items.length > 1) {
-                    alert("Only allowed to upload one file");
-                    return false;
-                }
-                if(ev.dataTransfer.files[0].size >= (1048576)){ //in byte = 1MB
-                   alert("The maximum file size is 1MB");
-                   return false;
-                }
-                if(checkImgFileType(ev.dataTransfer.files[0]) == true) {        
-                    $("#photo").prop("files", ev.dataTransfer.files);
-
-                    var blob = ev.dataTransfer.items[0].getAsFile();
-                    var URLObj = window.URL || window.webkitURL;
-                    var source = URLObj.createObjectURL(blob);
-
-                    var reader = new FileReader();
-                    reader.onload = function(ev) {
-                        // get loaded data and render thumbnail.
-                        $('.box-photo-upload.img-upload').removeClass('d-none');
-                        $('.opt-image-edit').removeClass('d-none');
-                        $('.box-photo-upload.img-upload').attr('src', ev.target.result);
-                        $('.box-photo-upload:not(.img-upload)').addClass('d-none');
-                    };
-                    // read the image file as a data URL.
-                reader.readAsDataURL(ev.dataTransfer.files[0]);
-                }
-            };
-            function checkImgFileType(file_) {
-                var file = file_;
-                var fileType = file["type"];
-                var validImageTypes = ["image/gif", "image/jpeg", "image/png"];
-                if ($.inArray(fileType, validImageTypes) < 0) {
-                    alert("Only allowed to upload image file");
-                    return false;
-                }else{
-                    return true;
-                }
             }
-            function searchImageFile(this_) {
-                var file = $(this_).parents().find("#photo");
-                file.trigger("click");
+        });
+        $('#address').bind('change keyup paste input blur focus propertychange', function() {
+            if ($("#form-apply").valid()) {
+                $('#form_submit_btn').prop('disabled', false);  
+            } else {
+                $('#form_submit_btn').prop('disabled', 'disabled');
             }
-            $('#photo').change(function(e) {
-                if(this.files[0].size >= (1000000)){ //in byte = 1MB
-                   alert("The maximum file size is 1MB");
-                   return false;
-                }
-                if(checkImgFileType(this.files[0]) == true) {
-                    var fileName = e.target.files[0].name;
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        // get loaded data and render thumbnail.
-                        $('.box-photo-upload.img-upload').removeClass('d-none');
-                        $('.opt-image-edit').removeClass('d-none');
-                        $('.box-photo-upload.img-upload').attr('src', e.target.result);
-                        $('.box-photo-upload:not(.img-upload)').addClass('d-none');
-                    };
-                    // read the image file as a data URL.
-                    reader.readAsDataURL(this.files[0]);
-                }else{
-                    $('.box-photo-upload.img-upload').addClass('d-none');
-                    $('.opt-image-edit').addClass('d-none');
-                    $('.box-photo-upload.img-upload').attr('src', "");
-                    $('.box-photo-upload:not(.img-upload)').removeClass('d-none');
-                }
-            });
+        });
+
+        $(".photo_upload").on("dragover", function(event) {
+            event.preventDefault();  
+            event.stopPropagation();
+            $(this).addClass('on_dragging');
+            $('.tx-drag-drop').text('Drop image here.');
+        });
+
+        $(".photo_upload").on("dragleave", function(event) {
+            event.preventDefault();  
+            event.stopPropagation();
+            $(this).removeClass('on_dragging');
+            $('.tx-drag-drop').html('<span class="d-block w-100 tx-drag-drop"><a href="javascript:void(0);" onclick="searchImageFile(this);">Upload a file</a> or drag and drop here</span>');
+        });
+
+        function dropHandler(ev) {
+            ev.preventDefault();  
+            //ev.stopPropagation();
+            $('.photo_upload').removeClass('on_dragging');
+            $('.tx-drag-drop').html('<span class="d-block w-100 tx-drag-drop"><a href="javascript:void(0);" onclick="searchImageFile(this);">Upload a file</a> or drag and drop here</span>');
+            if (ev.dataTransfer.items && ev.dataTransfer.items.length > 1) {
+                alert("Only allowed to upload one file");
+                return false;
+            }
+            if(ev.dataTransfer.files[0].size >= (1048576)){ //in byte = 1MB
+                alert("The maximum file size is 1MB");
+                return false;
+            }
+            if(checkImgFileType(ev.dataTransfer.files[0]) == true) {        
+                $("#photo").prop("files", ev.dataTransfer.files);
+
+                var blob = ev.dataTransfer.items[0].getAsFile();
+                var URLObj = window.URL || window.webkitURL;
+                var source = URLObj.createObjectURL(blob);
+
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    // get loaded data and render thumbnail.
+                    $('.box-photo-upload.img-upload').removeClass('d-none');
+                    $('.opt-image-edit').removeClass('d-none');
+                    $('.box-photo-upload.img-upload').attr('src', ev.target.result);
+                    $('.box-photo-upload:not(.img-upload)').addClass('d-none');
+                };
+                // read the image file as a data URL.
+            reader.readAsDataURL(ev.dataTransfer.files[0]);
+            }
+        };
+        function checkImgFileType(file_) {
+            var file = file_;
+            var fileType = file["type"];
+            var validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+            if ($.inArray(fileType, validImageTypes) < 0) {
+                alert("Only allowed to upload image file");
+                return false;
+            }else{
+                return true;
+            }
+        }
+        function searchImageFile(this_) {
+            var file = $(this_).parents().find("#photo");
+            file.trigger("click");
+        }
+        $('#photo').change(function(e) {
+            if(this.files[0].size >= (1000000)){ //in byte = 1MB
+                alert("The maximum file size is 1MB");
+                return false;
+            }
+            if(checkImgFileType(this.files[0]) == true) {
+                var fileName = e.target.files[0].name;
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    // get loaded data and render thumbnail.
+                    $('.box-photo-upload.img-upload').removeClass('d-none');
+                    $('.opt-image-edit').removeClass('d-none');
+                    $('.box-photo-upload.img-upload').attr('src', e.target.result);
+                    $('.box-photo-upload:not(.img-upload)').addClass('d-none');
+                };
+                // read the image file as a data URL.
+                reader.readAsDataURL(this.files[0]);
+            }else{
+                $('.box-photo-upload.img-upload').addClass('d-none');
+                $('.opt-image-edit').addClass('d-none');
+                $('.box-photo-upload.img-upload').attr('src', "");
+                $('.box-photo-upload:not(.img-upload)').removeClass('d-none');
+            }
+        });
     </script>
 @endpush

@@ -32,16 +32,6 @@
                         @endif
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-xs-12 text-left">
-                    <div class="checkbox-inline checkbox-custom pull-left">
-                        <input id="remember" type="checkbox" name="remember">
-                        {{-- <input id="remember" type="checkbox" name="remember" value="remember"> --}}
-                        <label for="remember" class="checkbox-muted text-muted" {{ old('remember') ? 'checked' : '' }}>Remember me</label>
-                    </div>
-                    {{-- <div class="pull-right"><a href="{{ url('sf-admin/password/reset') }}" class="inline-block form-control-static">Forgot a Password?</a></div> --}}
-                    </div>
-                </div>
                 <button type="submit" class="btn-lg btn btn-primary btn-rounded btn-block">Sign in</button>
             </form>
         </div>

@@ -32,6 +32,9 @@ class CriteriaController extends Controller
         ->editColumn('status', function($data) {
           return AI_status($data->status);
         })
+        ->editColumn('step', function($data) {
+          return criteria_step($data->step);
+        })
         ->addColumn('action', function($data) {
             return '
               <a href="' . route('criterias.show', $data->id) . '" class="btn btn-info btn-block">

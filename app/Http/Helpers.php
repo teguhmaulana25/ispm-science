@@ -144,6 +144,27 @@ function priority($status, $label = false) {
 	return $string;
 }
 
+/**
+ * 
+ * USING DB
+ */
+
+function get_skill($code)
+{
+     $output     = DB::table('skills')
+                     ->select([
+                         'skills.name',
+                     ])
+                     ->where('skills.id', '=', $code)
+                     ->first();
+     if(!empty($output))
+     {
+         return $output->name;
+     }else{
+         return 'Not Found';
+     }
+}
+
 function get_criteria_detail($criteria)
 {
 	$output     = DB::table('criteria_details')
@@ -177,17 +198,13 @@ function get_criteria_parent($code)
 {
 	$output     = DB::table('criteria_details')
 					->select([
+						'criterias.step',
 						'criterias.name',
 					])
 					->leftJoin('criterias', 'criteria_details.criteria_id', '=', 'criterias.id')
 					->where('criteria_details.id', '=', $code)
 					->first();
-	if(!empty($output))
-	{
-		return $output->name;
-	}else{
-		return 'Not Found';
-	}
+	return $output;
 }
 
 function get_criteria_list($code) {

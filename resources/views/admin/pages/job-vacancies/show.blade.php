@@ -1,16 +1,16 @@
 @extends('admin.layouts.admin')
-@section('title')Lihat Lowongan @endsection
+@section('title')Job Vacancy @endsection
 @section('add')
     <a href="{{ route('job-vacancies.index') }}" class="btn btn-success btn-xs">
-        <i class="fa fa-arrow-circle-left"></i> Kembali
+        <i class="fa fa-arrow-circle-left"></i> Back
     </a>
     <a href="{{ route('job-vacancies.edit', $data->id) }}" class="btn btn-success btn-xs">
-        <i class="fa fa-edit"></i> Edit Lowongan
+        <i class="fa fa-edit"></i> Edit Job Vacancy
     </a>
 @endsection
 @section('breadcrumb')
-	<li><a href="{{ route('job-vacancies.index') }}">Lowongan</a></li>
-	<li class="active"><a href="#">Lihat Lowongan</a></li>
+	<li><a href="{{ route('job-vacancies.index') }}">Job Vacancy</a></li>
+	<li class="active"><a href="#">View Job Vacancy</a></li>
 @endsection
 
 @section('content')
@@ -50,6 +50,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">Name</th>
+                                        <th class="text-center">Step</th>
                                         <th class="text-center">Criteria</th>
                                         <th class="text-center">Value</th>
                                     </tr>
@@ -57,8 +58,9 @@
                                 <tbody>
                                     @foreach ($jobCriteria as $item)
                                         <tr>
-                                            <td>{{ get_criteria_parent($item->criteria_detail_id) }}</td>
-                                            <td>{{ get_criteria_name($item->criteria_detail_id) }}</td>
+                                            <td>@if(get_criteria_parent($item->criteria_detail_id)) {{ get_criteria_parent($item->criteria_detail_id)->name }}  @endif</td>
+                                            <td class="text-center">@if(get_criteria_parent($item->criteria_detail_id)) {{ criteria_step(get_criteria_parent($item->criteria_detail_id)->step) }}  @endif</td>
+                                            <td>{{ $item->name }}</td>
                                             <td class="text-center">{{ $item->value }}</td>
                                         </tr>
                                     @endforeach

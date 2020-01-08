@@ -128,11 +128,19 @@ class JobVacancyController extends Controller
     public function show($id)
     {
       $data   = JobVacancy::findOrFail($id);
-      $jobCriteria = \App\JobVacancyDetail::where('job_vacancy_id', '=', $id)
-        ->orderBy('id', 'DESC')
+      $jobCriteria = \App\JobVacancyDetail::Select([
+          'job_vacancy_details.id',
+          'job_vacancy_details.job_vacancy_id',
+          'job_vacancy_details.criteria_detail_id',
+          'job_vacancy_details.value',
+          'criteria_details.name'
+        ])
+        ->leftJoin('criteria_details', 'job_vacancy_details.criteria_detail_id', '=', 'criteria_details.id')
+        ->where('job_vacancy_id', '=', $id)
+        ->orderBy('id', 'ASC')
         ->get();
       $jobSkill = \App\JobSkillDetail::where('job_vacancy_id', '=', $id)
-        ->orderBy('id', 'DESC')
+        ->orderBy('id', 'ASC')
         ->get();
       return view('admin.pages.job-vacancies.show')
         ->with(compact('data', 'jobCriteria', 'jobSkill'));
@@ -142,10 +150,10 @@ class JobVacancyController extends Controller
     {
       $data   = JobVacancy::findOrFail($id);
       $jobCriteria = \App\JobVacancyDetail::where('job_vacancy_id', '=', $id)
-        ->orderBy('id', 'DESC')
+        ->orderBy('id', 'ASC')
         ->get();
       $jobSkill = \App\JobSkillDetail::where('job_vacancy_id', '=', $id)
-        ->orderBy('id', 'DESC')
+        ->orderBy('id', 'ASC')
         ->get();
       $list_division     = DB::table('divisions')->where('divisions.status', '=', 1)->pluck('name', 'id');
       $start_date = Carbon\Carbon::parse($data->start_date)->format('m/d/Y h:m A');
@@ -266,11 +274,11 @@ class JobVacancyController extends Controller
     public function create_detail($job_vacancy_id)
     {
       $data   = JobVacancy::findOrFail($job_vacancy_id);
-      $jobCriteria = \App\Criteria::orderBy('id', 'DESC')
+      $jobCriteria = \App\Criteria::orderBy('id', 'ASC')
         ->get();
       $jobSkill = \App\Skill::where('division_id', '=', $data->division_id)
         ->where('status', '=', 1)
-        ->orderBy('id', 'DESC')
+        ->orderBy('id', 'ASC')
         ->get();
       return view('admin.pages.job-vacancies.create-detail')
         ->with(compact('data', 'jobCriteria', 'jobSkill'));
@@ -279,29 +287,36 @@ class JobVacancyController extends Controller
     public function store_detail(Request $request, $job_vacancy_id) {
       $input = $request->all();
       if ($input['data']['job_criteria'] && $input['data']['job_skill']) {
-        foreach ($input['data']['job_criteria'] as $key => $value) {
-          \App\JobVacancyDetail::create([
-            'job_vacancy_id' => $job_vacancy_id,
-            'criteria_detail_id' => $value['id'],
-            'value' => $value['value']
-          ]);
-        }
-        foreach ($input['data']['job_skill'] as $key => $value) {
-          \App\JobSkillDetail::create([
-            'job_vacancy_id' => $job_vacancy_id,
-            'skill_id' => $value['id'],
-            'value' => $value['value']
-          ]);
-        }
-        return redirect()
+        $checkExist = \App\JobVacancyDetail::where('job_vacancy_id', '=', $job_vacancy_id)->count();
+        if ($checkExist > 0) {
+          return redirect()
           ->route('job-vacancies.show', $job_vacancy_id)
-          ->with('info', 'Data berhasil disimpan');
+          ->withInput()
+          ->with('error', 'Data already exists !!');    
+        } else {
+          foreach ($input['data']['job_criteria'] as $key => $value) {
+            \App\JobVacancyDetail::create([
+              'job_vacancy_id' => $job_vacancy_id,
+              'criteria_detail_id' => $value['id'],
+              'value' => $value['value']
+            ]);
+          }
+          foreach ($input['data']['job_skill'] as $key => $value) {
+            \App\JobSkillDetail::create([
+              'job_vacancy_id' => $job_vacancy_id,
+              'skill_id' => $value['id'],
+              'value' => $value['value']
+            ]);
+          }
+          return redirect()
+            ->route('job-vacancies.show', $job_vacancy_id)
+            ->with('info', 'Data has been created.');
+        }
       } else {
         return redirect()
           ->back()
           ->withInput()
-          ->withErrors($validation->errors())
-          ->with('error', 'Silahkan melengkapi data kriteria dan kemampuan');    
+          ->with('error', 'Please complete the data !!');    
       }
     }
 }

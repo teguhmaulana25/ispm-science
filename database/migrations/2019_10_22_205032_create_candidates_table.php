@@ -25,13 +25,13 @@ class CreateCandidatesTable extends Migration
             $table->text('address')->nullable();
             $table->date('interview_date')->nullable();
             $table->tinyInteger('gender', false)->unsigned()->default(1)->comment('1:male;2:female;');
-            $table->tinyInteger('height', false)->nullable();
-            $table->tinyInteger('weight', false)->nullable();
+            $table->string('height', 10)->nullable();
+            $table->string('weight', 10)->nullable();
             $table->tinyInteger('religion', false)->nullable();
             $table->tinyInteger('blood_type', false)->nullable();
-            $table->string('nationality', 50);
-            $table->string('photo', 100);
-            $table->string('ktp', 20);
+            $table->string('nationality', 50)->nullable();
+            $table->string('photo', 100)->nullable();
+            $table->string('ktp', 20)->nullable();
             $table->text('social_media')->nullable();
             $table->timestamps();
         });
