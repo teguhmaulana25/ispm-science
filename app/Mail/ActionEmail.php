@@ -31,14 +31,14 @@ class ActionEmail extends Mailable
     public function build()
     {
     	if($this->data['type'] == "apply_finish"){
-            return $this->from('maulanateguh87@gmail.com')
+            return $this->from('support@asvicode.com', 'Dumet Careers')
                 ->view('mails.finishEmail')
                 ->with([
                     'name' => $this->data['name'],
                     'vacancy_name' => $this->data['vacancy_name'],
                 ]);
     	} elseif($this->data['type'] == "interview_email"){
-            return $this->from('maulanateguh87@gmail.com')
+            return $this->from('support@asvicode.com', 'Dumet Careers')
                 ->subject('Interview - Dumet Career')
                 ->view('mails.interviewEmail')
                 ->with([
@@ -47,7 +47,7 @@ class ActionEmail extends Mailable
                     'address' => "Ruko Jalan Kartini Raya No. 53 Pancoran Mas, Depok 16436 <br> Telp: (021) 7720-7657",
                 ]);
         } elseif($this->data['type'] == "onboarding_email"){
-                return $this->from('maulanateguh87@gmail.com')
+                return $this->from('support@asvicode.com', 'Dumet Careers')
                     ->subject('Onboarding - Dumet Career')
                     ->view('mails.onboardingEmail')
                     ->with([
