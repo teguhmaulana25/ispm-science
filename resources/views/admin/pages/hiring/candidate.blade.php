@@ -15,6 +15,8 @@
 	<div class="col-xs-12">
 		<div class="widget">
 			<div class="widget-body">
+                <form action="{{ route('hiring.candidate-update', $data->id) }}" role="form" method="post" accept-charset="utf-8" class="form-horizontal">
+                    @csrf
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover table-list pd-top10">
                             <tbody>
@@ -63,6 +65,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">Name</th>
+                                    <th class="text-center">Step</th>
                                     <th class="text-center">Criteria</th>
                                     <th class="text-center">Value</th>
                                 </tr>
@@ -71,20 +74,31 @@
                                 @foreach ($criteria as $key => $item)
                                 <tr>
                                     <td>{{ $item->name }}</td>
+                                    <td class="text-center">{{ $item->step }}</td>
                                     <td>
                                         <select name="data[job_criteria][{{ $key }}][id]" class="form-control job_criteria_select" required>
                                             <option value="" data-id="{{ $key }}">- select criteria -</option>
                                             @foreach(get_criteria_list_hiring($item->id) as $key_detail => $value_detail)
                                                 <option value="{{ $value_detail->id }}" data-id="{{ $key }}" data-value="{{ $value_detail->value }}" 
-                                                    @if($value_detail->id == $item->criteria_detail_id) selected @endif>
+                                                    @if(get_candidate_criteria($data->id, $value_detail->id)) selected @endif>
                                                     {{ $value_detail->name }}
                                                 </option>
                                             @endforeach
-                                        </select>                                                    
+                                        </select> 
                                     </td>
                                     <td class="text-center">
-                                        <input type="hidden" id="job_criteria_value{{ $key }}" name="data[job_criteria][{{ $key }}][value]" value="" >
-                                        <span id="job_criteria_value_html{{ $key }}">-</span>
+                                        <?php
+                                            $criteria_value = "";
+                                        ?>
+                                        @foreach(get_criteria_list_hiring($item->id) as $key_detail => $value_detail)
+                                            @if(get_candidate_criteria($data->id, $value_detail->id))
+                                                <?php
+                                                    $criteria_value = get_candidate_criteria($data->id, $value_detail->id)->answer;
+                                                ?>
+                                            @endif
+                                        @endforeach
+                                        <input type="hidden" id="job_criteria_value{{ $key }}" name="data[job_criteria][{{ $key }}][value]" value="@if($criteria_value) {{ $criteria_value }}  @endif" >
+                                        <span id="job_criteria_value_html{{ $key }}">@if($criteria_value) {{ $criteria_value }} @else {{ '-'}} @endif</span>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -109,10 +123,11 @@
                                         <td class="text-center">{!! check_skill_user($data->id, $item->id) !!}</td>
                                         <td>
                                             <input type="hidden" name="data[job_skill][{{ $key }}][id]" value="{{ $item->id }}" >
-                                            <select name="data[job_skill][{{ $key }}][value]" class="form-control" required>
+                                            <select name="data[job_skill][{{ $key }}][value]" class="form-control">
                                                 <option value="">- No Available -</option>
                                                 @foreach(priority_list() as $key_detail => $value_detail)
-                                                    <option value="{{ $key_detail }}">
+                                                    <option value="{{ $key_detail }}"
+                                                    @if(get_candidate_skill($data->id, $item->id, $key_detail) > 0) selected @endif>
                                                         {{ $value_detail }}
                                                     </option>
                                                 @endforeach
@@ -127,6 +142,7 @@
                     <button type="submit" class="btn btn-block btn-primary" id="submit_save">
                         <i class="fa fa-save"></i> Save
                     </button>
+                </form>
 			</div>
 		</div>
 	</div>

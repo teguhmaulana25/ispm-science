@@ -27,25 +27,31 @@
 							</tr>
 						</thead>
 						<tbody>
-							@foreach ($getCandidate as $item)
+							@if(count($getCandidate) > 0)
+								@foreach ($getCandidate as $item)
+									<tr>
+										<td>{{ $item->title_job }}</td>
+										<td class="text-center">{{ get_division($item->division_id) }}</td>
+										<td>
+											<address>
+												<b>Birthday : </b>{{ $item->birth_place.', '.$item->birth_date }}<br/>
+												<b>Email : </b>{{ $item->email }}<br/>
+												<b>Phone : </b>{{ $item->phone }}
+											</address>
+										</td>
+										<td class="text-center">{{ $item->interview_date }}</td>
+										<td class="text-center">
+											<a href="{{ route('hiring.candidate', $item->id) }}" class="btn btn-info btn-block">
+												<span class="fas fa-eye fa-fw"></span> View
+											</a>
+										</td>
+									</tr>
+								@endforeach
+							@else 
 								<tr>
-									<td>{{ $item->title_job }}</td>
-									<td class="text-center">{{ get_division($item->division_id) }}</td>
-									<td>
-										<address>
-											<b>Birthday : </b>{{ $item->birth_place.', '.$item->birth_date }}<br/>
-											<b>Email : </b>{{ $item->email }}<br/>
-											<b>Phone : </b>{{ $item->phone }}
-										</address>
-									</td>
-									<td class="text-center">{{ $item->interview_date }}</td>
-									<td class="text-center">
-										<a href="{{ route('hiring.candidate', $item->id) }}" class="btn btn-info btn-block">
-											<span class="fas fa-eye fa-fw"></span> View
-										</a>
-									</td>
+									<td colspan="5" class="text-center"><i class="fa fa-exclamation-circle fa-fw"></i> There is no data.</td>
 								</tr>
-							@endforeach
+							@endif
 						</tbody>
 					</table>
 				</div>

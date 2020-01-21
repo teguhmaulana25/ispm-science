@@ -20,42 +20,46 @@
 		<!-- general form elements disabled -->
 		<div class="widget">
 			<!-- /.widget-header -->
-			<div class="widget-body table-responsive">
+			<div class="widget-body">
                 @if(!empty($data))
-                    <table class="table table-bordered table-hover table-list pd-top10">
-                        <tbody>
-                            <tr>
-                                <th width="20%">Division Name</th>
-                                <td>{{ $data->name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Active</th>
-                                <td>{!! AI_status($data->status) !!}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-list pd-top10">
+                            <tbody>
+                                <tr>
+                                    <th width="20%">Division Name</th>
+                                    <td>{{ $data->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Active</th>
+                                    <td>{!! AI_status($data->status) !!}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <h4>Skill List</h4>
-                    <table class="table table-striped table-bordered table-list-product table-view">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Created</th>
-                                <th class="text-center">Updated</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($skill as $item)
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-list-product table-view">
+                            <thead>
                                 <tr>
-                                    <td>{{ $item->name }}</td>
-                                    <td class="text-center">{!! AI_status($item->status) !!}</td>
-                                    <td>{{ $item->created_at }}</td>
-                                    <td>{{ $item->updated_at }}</td>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Created</th>
+                                    <th class="text-center">Updated</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($skill as $item)
+                                    <tr>
+                                        <td>{{ $item->name }}</td>
+                                        <td class="text-center">{!! AI_status($item->status) !!}</td>
+                                        <td>{{ $item->created_at }}</td>
+                                        <td>{{ $item->updated_at }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @endif
                 
 			</div>
