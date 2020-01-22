@@ -156,21 +156,32 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
           ]);
         });
 
-
-        Route::resource('candidates', 'CandidateController');    
-        Route::get('/candidates/datatables/get/data', [
-          'uses' => 'CandidateController@data',
-          'as' => 'candidates.data'
-        ]);
+        // Route::resource('candidates', 'CandidateController');    
+        // Route::get('/candidates/datatables/get/data', [
+        //   'uses' => 'CandidateController@data',
+        //   'as' => 'candidates.data'
+        // ]);
 
         Route::group(['prefix' => 'candidates'], function() {
           Route::get('/', [
             'uses' => 'CandidateController@index',
             'as' => 'candidates.index'
           ]);
-          Route::post('/show', [
-            'uses' => 'CandidateController@show',
-            'as' => 'candidates.show'
+          Route::post('/', [
+            'uses' => 'CandidateController@filter',
+            'as' => 'candidates.filter'
+          ]);
+          Route::post('/job-vacancy', [
+            'uses' => 'CandidateController@jobVacancy',
+            'as' => 'candidates.job-vacancy'
+          ]);
+          Route::get('/view/{division}/{job_vacancy}', [
+            'uses' => 'CandidateController@view',
+            'as' => 'candidates.view'
+          ]);
+          Route::post('/view/{division}/{job_vacancy}', [
+            'uses' => 'CandidateController@update',
+            'as' => 'candidates.update'
           ]);
           Route::post('/save-int', [
             'uses' => 'CandidateController@saveIntv',
@@ -196,6 +207,10 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
             'uses' => 'HiringController@candidate',
             'as' => 'hiring.candidate'
           ]);
+          Route::post('candidate/{candidate_id}', [
+            'uses' => 'HiringController@candidateUpdate',
+            'as' => 'hiring.candidate-update'
+          ]);
         });
 
         // {domain_name}/onboarding/* routes
@@ -207,6 +222,18 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
           Route::post('/', [
             'uses' => 'OnboardingController@filter',
             'as' => 'onboarding.filter'
+          ]);
+          Route::post('/job-vacancy', [
+            'uses' => 'OnboardingController@jobVacancy',
+            'as' => 'onboarding.job-vacancy'
+          ]);
+          Route::get('/view/{division}/{job_vacancy}', [
+            'uses' => 'OnboardingController@view',
+            'as' => 'onboarding.view'
+          ]);
+          Route::post('/view/{division}/{job_vacancy}', [
+            'uses' => 'OnboardingController@update',
+            'as' => 'onboarding.update'
           ]);
         });
 
@@ -231,6 +258,17 @@ Route::group(['namespace' => 'Customer', 'domain' => env('APP_URL')], function (
     });
     Route::get('/os/clear-view', function() {
       $exitCode = Artisan::call('view:clear');
+    });
+
+    /*----------  run queue  ----------*/
+    Route::get('/os/queue-work', function() {
+      Artisan::call('queue:work', [
+          'database',
+          '--daemon' => true,
+          '--sleep' => 3,
+          '--tries' => 3
+      ]);
+      return redirect('/');
     });
     
     Route::get('/vacancy-list/{id}', [
@@ -257,4 +295,6 @@ Route::group(['namespace' => 'Customer', 'domain' => env('APP_URL')], function (
         'uses' => 'PagesController@error_vacancy',
         'as' => 'apply_vacancy_error'
     ]);
-});
+
+  });
+

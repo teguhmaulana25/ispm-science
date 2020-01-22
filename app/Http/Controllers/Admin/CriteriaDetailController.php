@@ -96,6 +96,7 @@ class CriteriaDetailController extends Controller
     public function edit($criteria_id, $id)
     {
       $data   = CriteriaDetail::findOrFail($id);
+      $data->value = round($data->value, 3);
       return view('admin.pages.criteria-details.edit')
         ->with(compact('data'));
     }
@@ -124,7 +125,7 @@ class CriteriaDetailController extends Controller
           if ($update) {
             return redirect()
               ->route('criteria-details.show', $criteria_id)
-              ->with('info', $request->input('title') . ' has been updated.');
+              ->with('info', $request->input('name') . ' has been updated.');
           } else {
             return redirect()
             ->back()

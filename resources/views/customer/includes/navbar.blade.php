@@ -10,7 +10,7 @@
     <div class="navbar-collapse collapse" id="main-navbar" style="">
       <ul class="navbar-nav ml-auto">  
         <li class="nav-item">
-          <a class="nav-link" href="https://www.dumetschool.com/">Home</a>
+          <a class="nav-link" href="{{ route('home_pages') }}">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://www.dumetschool.com/about/">About Us</a>

@@ -21,7 +21,7 @@
             <ul id="collapse1" class="list-unstyled collapse {{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' || 
             Request::segment(1) === 'criterias' || Request::segment(1) === 'criteria-details' ? 'in' : '' }}">
                 <li>
-                    <a href="{{ route('divisions.index') }}" class="{{ Request::segment(1) === 'divisions' ? 'active' : '' }}">Division</a>
+                    <a href="{{ route('divisions.index') }}" class="{{ Request::segment(1) === 'divisions' || Request::segment(1) === 'skills' ? 'active' : '' }}">Division</a>
                 </li>
                 <li>
                     <a href="{{ route('criterias.index') }}" class="{{ Request::segment(1) === 'criterias' || Request::segment(1) === 'criteria-details'  ? 'active' : '' }}">Criteria</a>

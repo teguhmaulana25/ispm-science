@@ -7,6 +7,14 @@ function humanize_datetime_format($datetime) {
 	return Carbon\Carbon::parse($datetime)->format('l\\, j F Y H:i:s');
 }
 
+function humanize_date_format($datetime) {
+	if ($datetime == null) {
+		return null;
+	}
+
+	return Carbon\Carbon::parse($datetime)->format('l\\, j F Y');
+}
+
 function convertToAngka($rupiah)
 {
     // $int = ereg_replace("[^0-9]", "", $rupiah); 
@@ -144,6 +152,27 @@ function priority($status, $label = false) {
 	return $string;
 }
 
+/**
+ * 
+ * USING DB
+ */
+
+function get_skill($code)
+{
+     $output     = DB::table('skills')
+                     ->select([
+                         'skills.name',
+                     ])
+                     ->where('skills.id', '=', $code)
+                     ->first();
+     if(!empty($output))
+     {
+         return $output->name;
+     }else{
+         return 'Not Found';
+     }
+}
+
 function get_criteria_detail($criteria)
 {
 	$output     = DB::table('criteria_details')
@@ -177,17 +206,13 @@ function get_criteria_parent($code)
 {
 	$output     = DB::table('criteria_details')
 					->select([
+						'criterias.step',
 						'criterias.name',
 					])
 					->leftJoin('criterias', 'criteria_details.criteria_id', '=', 'criterias.id')
 					->where('criteria_details.id', '=', $code)
 					->first();
-	if(!empty($output))
-	{
-		return $output->name;
-	}else{
-		return 'Not Found';
-	}
+	return $output;
 }
 
 function get_criteria_list($code) {
@@ -221,6 +246,34 @@ function get_criteria_list_hiring($code) {
 	return $output;
 }
 
+function get_candidate_criteria($candidate_id, $criteria_detail_id) {
+	$output     = DB::table('candidate_details')
+		->select([
+			'candidate_details.id',
+			'candidate_details.answer',
+			'criteria_details.value as criteria_value',
+		])
+		->leftJoin('criteria_details', 'candidate_details.criteria_detail_id', '=', 'criteria_details.id')
+		->where('candidate_details.candidate_id', '=', $candidate_id)
+		->where('candidate_details.criteria_detail_id', '=', $criteria_detail_id)
+		->first();
+	return $output;
+}
+
+function get_candidate_skill($candidate_id, $skill, $answer) {
+	$output     = DB::table('candidate_skills')
+		->select([
+			'candidate_skills.id',
+			'candidate_skills.answer',
+		])
+		->where('candidate_skills.candidate_id', '=', $candidate_id)
+		->where('candidate_skills.skill_id', '=', $skill)
+		->where('candidate_skills.answer', '=', $answer)
+		->count();
+	return $output;
+}
+
+
 function get_division($code)
 {
 	$output     = DB::table('divisions')
@@ -237,11 +290,26 @@ function get_division($code)
 	}
 }
 
+function job_vacancy($code)
+{
+	$output     = DB::table('job_vacancies')
+					->select([
+						'job_vacancies.title',
+						'job_vacancies.description',
+						'job_vacancies.start_date',
+						'job_vacancies.end_date',
+					])
+					->where('job_vacancies.id', '=', $code)
+					->first();
+	return $output;
+}
+
 function check_skill_user($candidate_id, $skill_id, $label = true)
 {
 	$checkSkill = DB::table('candidate_skills')
 		->where('candidate_skills.candidate_id', '=', $candidate_id)
 		->where('candidate_skills.skill_id', $skill_id)
+		->where('candidate_skills.answer', '!=', '0.00')
 		->count();
 	if ($checkSkill > 0) {
 		$string = "Yes";

@@ -58,8 +58,8 @@
 
 .page-ajax .page-loader .spinner {
     margin: 0 auto;
-    border: 2px solid #eeeeee;
-    border-top-color: #2eaef0;
+    /* border: 2px solid #eeeeee;
+    border-top-color: #2eaef0; */
     font-size: 40px;
     width: 1em;
     height: 1em;
@@ -182,6 +182,7 @@
 .pd-right30{padding-right: 30px !important;}
 .pd-right35{padding-right: 35px !important;}
 .pd-right40{padding-right: 40px !important;}
+
 
 @media (max-width: 767px) {
     .wizard > .steps > ul > li {

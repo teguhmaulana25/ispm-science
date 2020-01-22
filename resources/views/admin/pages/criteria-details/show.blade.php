@@ -43,7 +43,7 @@
                     <div class="form-group {{ $errors->has('value') ? 'has-error' : '' }}">
                         <label class="control-label col-md-2">Value</label>
                         <div class="col-md-4">
-                            <input type="text" name="value" class="form-control " value="{{ Request::old('value') ?: '' }}" required="required">
+                            <input type="text" name="value" class="form-control txt_number" value="{{ Request::old('value') ?: '' }}" required="required">
         
                             @if ($errors->has('value'))
                                 <span class="help-block">

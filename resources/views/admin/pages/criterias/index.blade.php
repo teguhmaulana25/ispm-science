@@ -19,6 +19,8 @@
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
+                            <th>Step</th>
+                            <th>Percentage</th>
                             <th>Status</th>
                             <th>Created</th>
                             <th>Updated</th>
@@ -46,6 +48,8 @@
                 columns: [
                     { data: 'id', name: 'id', visible: false, searchable: false },
                     { data: 'name', name: 'criterias.name'},
+                    { data: 'step', name: 'step', searchable: false, sClass: 'text-center' },
+                    { data: 'percentage', name: 'percentage', searchable: false, sClass: 'text-center' },
                     { data: 'status', name: 'status', searchable: false, sClass: 'text-center' },
                     { data: 'created_at', name: 'created_at', searchable: false },
                     { data: 'updated_at', name: 'updated_at', searchable: false },

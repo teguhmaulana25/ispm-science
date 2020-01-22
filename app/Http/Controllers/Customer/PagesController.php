@@ -331,7 +331,7 @@ class PagesController extends Controller
                         'name' => $request->input('name'),
                         'vacancy_name' => $request->input('vacancy_name')
                       ];
-          Mail::to($request->input('email'))->send(new ActionEmail($varEMail));
+          // Mail::to($request->input('email'))->send(new ActionEmail($varEMail));
           for ($idx = 1; $idx <= $request->input('count_criteria'); $idx++) {
               CandidateDetail::create([
                 'candidate_id' => $data->id,

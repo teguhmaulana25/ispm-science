@@ -61,6 +61,7 @@ class HiringController extends Controller
             ->leftJoin('job_vacancies', 'candidates.job_vacancy_id', '=', 'job_vacancies.id')
             ->where('interview_date', '<=', $end_date)
             ->where('interview_date', '>=', $start_date)
+            ->orderBy('interview_date', 'ASC')
             ->get();
           return view('admin.pages.hiring.list')->with(compact('getCandidate'));
       } else {
@@ -100,7 +101,7 @@ class HiringController extends Controller
               $checkCriteria = Criteria::select([
                   'criterias.id'
                 ])
-                ->where('criterias.step', '=', 2)
+                // ->where('criterias.step', '=', 2)
                 ->where(function ($query) use ($criteria_detail_id) {
                   $query->whereHas('criteriaDetail', function($query) use ($criteria_detail_id) {
                     $query->where('criteria_details.id', '=', $criteria_detail_id);
@@ -108,19 +109,20 @@ class HiringController extends Controller
                 })
                 ->count();
               if ($checkCriteria > 0) {
-                $criteria[] = Criteria::select([
+                  $criteria[] = Criteria::select([
                     'criterias.id',
                     'criterias.name',
                     'criterias.percentage',
                     'criterias.type',
                     'criterias.step'
                   ])
-                  ->where('criterias.step', '=', 2)
+                  // ->where('criterias.step', '=', 2)
                   ->where(function ($query) use ($criteria_detail_id) {
                     $query->whereHas('criteriaDetail', function($query) use ($criteria_detail_id) {
                       $query->where('criteria_details.id', '=', $criteria_detail_id);
                     });
                   })
+                  ->orderBy('criterias.id', 'ASC')
                   ->first();
               }
             }
@@ -160,6 +162,51 @@ class HiringController extends Controller
         return redirect()
           ->back()
           ->with('error', 'Data candidate not found');
+      }
+    }
+
+    public function candidateUpdate(Request $request, $candidate)
+    {
+      $input = $request->all();
+      if ($input['data']) {
+        $data = \App\Candidate::findOrFail($candidate);
+        if ($data) {
+          \App\CandidateDetail::where('candidate_id', '=', $data->id)->delete();
+          \App\CandidateSkill::where('candidate_id', '=', $data->id)->delete();              
+          foreach ($input['data']['job_criteria'] as $key => $value) {
+            \App\CandidateDetail::create([
+              'candidate_id' => $data->id,
+              'criteria_detail_id' => $value['id'],
+              'answer' => $value['value']
+            ]);
+          }
+          foreach ($input['data']['job_skill'] as $key => $value) {
+            $answer = 0;
+            if (!empty($value['value'])) {
+              $answer = $value['value'];
+            }
+            \App\CandidateSkill::create([
+              'candidate_id' => $data->id,
+              'skill_id' => $value['id'],
+              'answer' => $answer
+            ]);
+          }
+          return redirect()
+            ->back()
+            ->with('info', 'Data '. $data->name . ' has been updated.');
+        } else {
+          return redirect()
+          ->back()
+          ->with('error', 'Data candidate not found');   
+        }
+
+        echo '<pre>';
+          print_r($input['data']);
+        echo '</pre>';
+      } else {
+        return redirect()
+          ->back()
+          ->with('error', 'Please check your input');        
       }
     }
 }

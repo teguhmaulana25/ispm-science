@@ -139,7 +139,7 @@ class SkillController extends Controller
           if ($update) {
             return redirect()
               ->route('skills.show', $division_id)
-              ->with('info', $request->input('title') . ' has been updated.');
+              ->with('info', $request->input('name') . ' has been updated.');
           } else {
             return redirect()
             ->back()

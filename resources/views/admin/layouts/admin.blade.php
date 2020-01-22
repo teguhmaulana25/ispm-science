@@ -86,6 +86,19 @@
       </div>
       {{-- @include('includes.right-sidebar') --}}
     </div>
+    <div class="page-ajax">
+      <div class="page-loader">
+        <div class="spinner">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        {{-- <div class="sk-three-bounce">
+          <div class="sk-child sk-bounce1"></div>
+          <div class="sk-child sk-bounce2"></div>
+          <div class="sk-child sk-bounce3"></div>
+        </div> --}}
+        Please wait...
+      </div>
+    </div>
 		<!-- jQuery 2.2.3 -->
 		<script type="text/javascript" src="{{ asset('js/jquery-2.2.4.min.js') }}"></script>
     <!-- Bootstrap -->

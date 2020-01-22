@@ -1,13 +1,13 @@
 @extends('admin.layouts.admin')
-@section('title')Edit Lowongan @endsection
+@section('title')Edit Job Vacancy @endsection
 @section('add')
     <a href="{{ route('job-vacancies.index') }}" class="btn btn-success btn-xs">
-        <i class="fa fa-arrow-circle-left"></i> Kembali
+        <i class="fa fa-arrow-circle-left"></i> Back
     </a>
 @endsection
 @section('breadcrumb')
-	<li><a href="{{ route('job-vacancies.index') }}">Lowongan</a></li>
-	<li class="active"><a href="#">Edit Lowongan</a></li>
+	<li><a href="{{ route('job-vacancies.index') }}">Job Vacancy</a></li>
+	<li class="active"><a href="#">Edit Job Vacancy</a></li>
 @endsection
 
 @section('content')
@@ -98,6 +98,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">Name</th>
+                                    <th class="text-center">Step</th>
                                     <th class="text-center">Criteria</th>
                                     <th class="text-center">Value</th>
                                 </tr>
@@ -105,12 +106,13 @@
                             <tbody>
                                 @foreach ($jobCriteria as $key => $item)
                                     <tr>
-                                        <td>{{ get_criteria_parent($item->criteria_detail_id) }}</td>
+                                        <td>@if(get_criteria_parent($item->criteria_detail_id)) {{ get_criteria_parent($item->criteria_detail_id)->name }}  @endif</td>
+                                        <td class="text-center">@if(get_criteria_parent($item->criteria_detail_id)) {{ criteria_step(get_criteria_parent($item->criteria_detail_id)->step) }}  @endif</td>
                                         <td>
                                             <select name="data[job_criteria][{{ $key }}][id]" class="form-control job_criteria_select" required>
                                                 <option value="" data-id="{{ $key }}">- select criteria -</option>
-                                                @foreach(get_criteria_list($item->id) as $key_detail => $value_detail)
-                                                <option value="{{ $value_detail->id }}" data-id="{{ $key }}" data-value="{{ $value_detail->value }}">
+                                                @foreach(get_criteria_list($item->criteria_detail_id) as $key_detail => $value_detail)
+                                                <option value="{{ $value_detail->id }}" data-id="{{ $key }}" data-value="{{ $value_detail->value }}" @if($value_detail->id == $item->criteria_detail_id) selected @endif>
                                                         {{ $value_detail->name }}
                                                     </option>
                                                 @endforeach
@@ -138,9 +140,9 @@
                             <tbody>
                                 @foreach ($jobSkill as $key => $item)
                                     <tr>
-                                        <td>{{ $item->skill->name }}</td>
+                                        <td>{{ get_skill($item->skill_id) }}</td>
                                         <td>
-                                            <input type="hidden" name="data[job_skill][{{ $key }}][id]" value="{{ $item->id }}" >
+                                            <input type="hidden" name="data[job_skill][{{ $key }}][id]" value="{{ $item->skill_id }}" >
                                             <select name="data[job_skill][{{ $key }}][value]" class="form-control" required>
                                                 <option value="">- select prioritas -</option>
                                                 @foreach(priority_list() as $key_detail => $value_detail)

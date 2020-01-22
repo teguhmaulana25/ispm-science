@@ -20,53 +20,58 @@
 		<!-- general form elements disabled -->
 		<div class="widget">
 			<!-- /.widget-header -->
-			<div class="widget-body table-responsive">
+			<div class="widget-body">
                 @if(!empty($data))
-                    <table class="table table-bordered table-hover table-list pd-top10">
-                        <tbody>
-                            <tr>
-                                <th width="20%">Criteria Name</th>
-                                <td>{{ $data->name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Percentage</th>
-                                <td>{{ $data->percentage }}</td>
-                            </tr>
-                            <tr>
-                                <th>Type</th>
-                                <td>{!! criteria_type($data->type) !!}</td>
-                            </tr>
-                            <tr>
-                                <th>Step</th>
-                                <td>{!! criteria_step($data->step) !!}</td>
-                            </tr>
-                            <tr>
-                                <th>Active</th>
-                                <td>{!! AI_status($data->status) !!}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table class="table table-striped table-bordered table-list-product table-view  mg-top20">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Value</th>
-                                <th class="text-center">Created</th>
-                                <th class="text-center">Updated</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($criteriaDetail as $item)
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-list pd-top10">
+                            <tbody>
                                 <tr>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ $item->value }}</td>
-                                    <td>{{ $item->created_at }}</td>
-                                    <td>{{ $item->updated_at }}</td>
+                                    <th width="20%">Criteria Name</th>
+                                    <td>{{ $data->name }}</td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                <tr>
+                                    <th>Percentage</th>
+                                    <td>{{ $data->percentage }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <td>{!! criteria_type($data->type) !!}</td>
+                                </tr>
+                                <tr>
+                                    <th>Step</th>
+                                    <td>{!! criteria_step($data->step) !!}</td>
+                                </tr>
+                                <tr>
+                                    <th>Active</th>
+                                    <td>{!! AI_status($data->status) !!}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Criteria Detail List</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-list-product table-view ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Value</th>
+                                    <th class="text-center">Created</th>
+                                    <th class="text-center">Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($criteriaDetail as $item)
+                                    <tr>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->value }}</td>
+                                        <td>{{ $item->created_at }}</td>
+                                        <td>{{ $item->updated_at }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @endif
                 
 			</div>
