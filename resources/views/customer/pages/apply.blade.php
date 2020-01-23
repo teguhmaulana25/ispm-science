@@ -21,6 +21,8 @@
         <div class="section-padding-50 content-page-wrap mt-5">
         <div class="row justify-content-md-center row-form-apply">
             <div class="col-md-10">
+                <div id="block-alert"></div>
+                <div class="rqd-notif"><b class="rq">*</b> Required fields</div>
                 <form id="form-apply" action="{{ route('apply_vacancy_post') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="job_vacancy_id" value="{{ $data->id_vacancy }}">
@@ -28,49 +30,49 @@
                     <input type="hidden" name="vacancy_name" value="{{ $data->title }}">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group parent" valid-name="Fullname">
                                 <label for="fullname">Fullname <i class="rqd">*</i></label>
-                                <input type="text" class="form-control" id="fullname" name="name" required autofocus>
+                                <input type="text" class="form-control" id="fullname" name="name" required>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-7">
-                                    <div class="form-group">
+                                    <div class="form-group parent" valid-name="Place of birth">
                                         <label for="p_birth">Place of birth <i class="rqd">*</i></label>
                                         <input type="text" class="form-control" id="p_birth" name="birth_place" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5">
-                                    <div class="form-group">
+                                    <div class="form-group parent" valid-name="Date of birth">
                                         <label for="p_birth">Date of birth <i class="rqd">*</i></label>
                                         <input id="d_birth" placeholder="ex: 1990/10/29" name="birth_date" required autocomplete="off">
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group parent" valid-name="Email address" data-alert="a-email">
                                 <label for="email">Email address <i class="rqd">*</i></label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control mail-input" id="email" name="email" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-7">
-                                    <div class="form-group">
+                                    <div class="form-group parent" valid-name="NIK (KTP)" data-alert="a-nik">
                                         <label for="ktp">NIK (KTP) <i class="rqd">*</i></label>
-                                        <input type="text" class="form-control" id="ktp" name="ktp" minlength="16" maxlength="16" required autofocus>
+                                        <input type="text" class="form-control ktp-input" id="ktp" name="ktp" minlength="16" maxlength="16" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group parent" valid-name="Nationality">
                                         <label for="nationality">Nationality <i class="rqd">*</i></label>
                                         <input type="text" class="form-control" id="nationality" placeholder="ex: Indonesia" name="nationality" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group parent" valid-name="Phone number">
                                         <label for="phone">Phone number <i class="rqd">*</i></label>
                                         <input type="text" class="form-control" id="phone" placeholder="ex: 08....." name="phone" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5">
-                                    <div class="form-group">
+                                    <div class="form-group parent" valid-name="Photo">
                                         <label for="phone">Photo <i class="rqd">*</i> <img src="{{ asset('img/help.svg') }}" alt="Info Photo" class="opt-info" width="16" data-toggle="tooltip" data-placement="top" title="Maximum file size 1 MB - acceptable file types .jpg, .jpeg, .gif, .png."></label>
-                                        <input type="file" class="form-control img-input-hidden" id="photo" name="photo" accept="image/x-png,image/gif,image/jpeg" required>
+                                        <input type="file" class="form-control img-input-hidden data-file-photo error" id="photo" name="photo" accept="image/x-png,image/gif,image/jpeg" required>
                                         <div class="position-relative">
                                             <div class="box-photo-upload photo_upload" ondrop="dropHandler(event);">
                                                <span class="d-block w-100 tx-drag-drop"><a href="javascript:void(0);" onclick="searchImageFile(this);">Upload a file</a> or drag and drop here</span>
@@ -85,7 +87,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="box-questions">
+                            <div class="box-questions parent" valid-name="Gender">
                                 <label>Gender <i class="rqd">*</i></label>
                                 <div class="form-group">
                                     <label class="container_radio version_2 d-inline-block mr-4">Laki-laki
@@ -100,9 +102,9 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
+                            <div class="form-group parent" valid-name="Religion">
                                 <label for="religion_sel">Religion <i class="rqd">*</i></label>
-                                <select name="religion" class="form-control" id="religion_sel">
+                                <select name="religion" class="form-control" id="religion_sel" required>
                                     <option value="">Pilih Agama</option>
                                     <option value="1">Islam</option>
                                     <option value="2">Kristen</option>
@@ -114,9 +116,9 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
+                            <div class="form-group parent" valid-name="Blood Type">
                                 <label for="blood_sel">Blood Type <i class="rqd">*</i></label>
-                                <select name="blood_type" class="form-control" id="blood_sel">
+                                <select name="blood_type" class="form-control" id="blood_sel" required>
                                     <option value="">Pilih Golongan Darah</option>
                                     <option value="1">O</option>
                                     <option value="2">A</option>
@@ -127,8 +129,8 @@
                         </div>
                         <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="form-group parent" valid-name="Height">
                                     <label for="height">Height <i class="rqd">*</i></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="height" name="height" required>
@@ -138,8 +140,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="form-group parent" valid-name="Weight">
                                     <label for="weight">Weight <i class="rqd">*</i></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="weight" name="weight" required>
@@ -149,16 +151,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <label for="social_media">Social Media</label>
-                                <textarea id="social_media"class="form-control" rows="1" name="social_media" placeholder="FB: xxxx IG: xxxx etc."></textarea>
+                                <textarea id="social_media" valid-name="Social Media" class="form-control" rows="1" name="social_media" placeholder="FB: xxxx IG: xxxx etc."></textarea>
                             </div>
                         </div>
                     </div>
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="form-group parent" valid-name="Address">
                                 <label for="address">Address <i class="rqd">*</i></label>
-                                <textarea id="address"class="form-control" rows="4" name="address" required></textarea>
+                                <textarea id="address" class="form-control" rows="4" name="address" required></textarea>
                             </div>
                         </div>
                     </div>
@@ -166,13 +168,13 @@
                         <div class="col-md-8">
                             @if(count($arr_criteria) > 0)
                                 @foreach($arr_criteria as $c)
-                                    <div class="box-questions mb-5">
+                                    <div class="box-questions mb-5 parent" valid-name="Question {{$c['criteria_name']}}">
                                         <h3 class="main_question">{{$c['criteria_name']}} <i class="rqd">*</i></h3>
                                         @foreach($c['criteria_data'] as $key => $v)
                                             <div class="form-group">
                                                 <label class="container_radio version_2">{{$v['name']}}
                                                     <input class="rd" type="radio" name="question_criteria_{{$c['criteria_id']}}[]" 
-                                                    value="{{$v['id'].'_'.$v['value']}}" {{($key == 0)? 'required' : ''}}>
+                                                    value="{{$v['id'].'_'.$v['value']}}" {{($key == 0)? "required" : '' }}>
                                                     <span class="checkmark"></span>
                                                 </label>
                                             </div>
@@ -183,12 +185,12 @@
                         </div>
                         <div class="col-md-4">
                             @if(count($arr_skill) > 0)
-                                <div class="box-questions mb-5">
-                                    <h3 class="main_question">Choose Skills <i class="rqd">*</i></h3>
+                                <div class="box-questions mb-5 parent" valid-name="Choose Skills">
+                                    <h3 class="main_question">Choose Skills <i class="rqd">*</i> <img src="{{ asset('img/help.svg') }}" alt="Info Photo" class="opt-info" width="16" data-toggle="tooltip" data-placement="top" title="You must choose skill at least one"></h3>
                                     @foreach($arr_skill['skills'] as $keys => $s)
                                         <div class="form-group">
                                             <label class="container_check version_2">{{$s['name']}}
-                                                <input class="ch" type="checkbox" name="question_skills[]" value="{{$s['id'].'_'.$s['value']}}">
+                                                <input class="ch" type="checkbox" name="question_skills[]" value="{{$s['id'].'_'.$s['value']}}" {{($keys == 0)? "required" : '' }}>
                                                 <span class="checkmark"></span>
                                             </label>
                                         </div>
@@ -197,7 +199,8 @@
                             @endif
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-apply btn-apply-hg active-btn btn-block" id="form_submit_btn">Send Application</button>
+                    <button type="button" class="btn btn-apply btn-apply-hg active-btn btn-block" id="form_submit_btn">Send Application</button>
+                    <button type="submit" class="d-none">Submit</button>
                 </form>
             </div>
             
@@ -248,28 +251,29 @@
                     phone: {
                         required: true
                     },
-                        address: {
+                    address: {
                         required: true
                     },
-                        religion: {
+                    religion: {
                         required: true
                     },
-                        gender: {
+                    gender: {
                         required: true
                     },
-                        blood_type: {
+                    blood_type: {
                         required: true
                     },
-                        ktp: {
+                    ktp: {
+                        required: true,
+                        minlength: 16
+                    },
+                    weight: {
                         required: true
                     },
-                        weight: {
+                    height: {
                         required: true
                     },
-                        height: {
-                            required: true
-                    },
-                        nationality: {
+                    nationality: {
                         required: true
                     }
                 }
@@ -278,29 +282,166 @@
             $(".ch").rules("add", { 
                 required:true
             });
-            $('#photo').rules('add', {
-                required: true,
-                accept: "image/jpeg, image/gif, image/png"
-            });
+            // $('#photo').rules('add', {
+            //     required: true,
+            //     accept: "image/jpeg, image/gif, image/png"
+            // });
             $('#form-apply').submit();
             $('#fullname').focus();
-            // $('#form_submit_btn').prop('disabled', 'disabled');
-        });
+            // exec valid form
+            fncFormValid();
 
-        $('input').on('change keyup paste input blur focus', function() {
-            if ($("#form-apply").valid()) {
-                $('#form_submit_btn').prop('disabled', false);  
-            } else {
-                $('#form_submit_btn').prop('disabled', 'disabled');
+        });
+        function execValdiationError() {
+            var dataAlert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">'+
+                            '<button onclick="execHideAlert();" type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                                '<span aria-hidden="true">×</span>'+
+                            '</button>'+
+                            '<h5 class="alert-heading">Validation error.</h5>';
+            $('.error').each(function() {
+                if( $(this).attr('type') == "checkbox"){
+                    $('.ch').closest('label').find('.checkmark').each(function() {
+                        $(this).addClass('is-invalid');
+                    }); 
+                }else if( $(this).attr('type') == "radio" ){
+                    $(this).closest('label').find('.checkmark').addClass('is-invalid');
+                }else if( $(this).attr('type') == "file" ){
+                    $(this).closest('.form-group').find('.photo_upload').addClass('is-invalid');
+                }else{
+                    $(this).addClass('is-invalid');
+                }
+                var getTxErr = $(this).closest('.parent');
+                if( $( this ).prop( 'required' )){
+                    var cond_alert = ($(this).attr("name") == "ktp" || $(this).attr("name") == "email")? ' '+getTxErr.attr('data-alert') : '';
+                    dataAlert += '<div class="list-err'+cond_alert+'"><b>'+getTxErr.attr('valid-name')+'</b> is required. </div>';
+                }
+                // validate ktp
+                if( $(this).val() != "" && $(this).attr("name") == "ktp" ){
+                    if($(this).val().length != 16) {
+                        dataAlert += "<div class='list-err'><b>"+getTxErr.attr('valid-name')+"</b> must be a 16 digit number.</div>";
+                    }
+                }
+                // validate email
+                if( $(this).val() != "" && $(this).attr("type") == "email" ){
+                    var regex = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@a-zA-Z0-9?(?:.a-zA-Z0-9?)$/i;
+                    if(!regex.test($("input[type = 'email']").val())) {
+                        dataAlert += "<div class='list-err'><b>"+getTxErr.attr('valid-name')+"</b> must be a valid email.</div>";
+                    }
+                }
+            });
+            dataAlert += '<hr>'+
+                            '<div class="mb-0"><small>Semua kolom yang bertanda <b>*</b> harus diisi.</small></div>'+
+                        '</div>';
+            if( !$('#block-alert').hasClass('hide-alert') ){
+                $('#block-alert').html(dataAlert);
+
+                if($('input.ktp-input').val() != "" && $('input.ktp-input').val().length != 16) {
+                    $('#block-alert').find('.list-err.a-nik').remove();
+                }
+                var regex = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@a-zA-Z0-9?(?:.a-zA-Z0-9?)$/i;
+                if(!regex.test($("input.mail-input").val()) && $("input.mail-input").val() != "" ) {
+                    $('#block-alert').find('.list-err.a-email').remove();
+                }
+            } 
+            if($('.error').length == 0) {
+                $('#block-alert').html('');
+            }
+        }
+        function fncFormValid() {
+            $('#form_submit_btn').click(function(){ 
+                $('#block-alert').removeClass('hide-alert');
+                if($('.error').length > 0){
+                    $('#form-apply').addClass('has-exec');
+                    execValdiationError();
+                    $('html, body').animate({
+                        scrollTop: $("#block-alert").offset().top - 115
+                    }, 500, 'linear');
+                }else{
+                    $('#form-apply').removeClass('has-exec');
+                    $('#form-apply').submit();
+                }
+            });
+        }
+        function execHideAlert() {
+            $('#block-alert').addClass('hide-alert');
+        }
+        $('input:not(.mail-input)').on('change keyup paste input blur focus', function() {
+            if($('#form-apply').hasClass('has-exec')){
+                if($(this).val() != ""){
+                    $(this).removeClass('is-invalid error');
+                }else{
+                    $(this).addClass('is-invalid error');
+                }  
+                execValdiationError();
+            }
+        });
+        $('input.mail-input').on('change keyup paste input blur focus', function() {
+            if($('#form-apply').hasClass('has-exec')){
+                var regex = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@a-zA-Z0-9?(?:.a-zA-Z0-9?)$/i;
+                if(!regex.test($(this).val()) && $(this).val() != "") {
+                    $(this).removeClass('is-invalid');
+                }else{
+                    $(this).addClass('is-invalid');
+                }
+                execValdiationError();
+            }
+        });
+        $('input.ktp-input').on('change keyup paste input blur focus', function() {
+            if($('#form-apply').hasClass('has-exec')){
+                if($(this).val() != "" && $(this).val().length == 16){
+                    $(this).removeClass('is-invalid error');
+                }else{
+                    $(this).addClass('is-invalid error');
+                }
+                execValdiationError();
             }
         });
         $('#address').bind('change keyup paste input blur focus propertychange', function() {
-            if ($("#form-apply").valid()) {
-                $('#form_submit_btn').prop('disabled', false);  
-            } else {
-                $('#form_submit_btn').prop('disabled', 'disabled');
+            if($('#form-apply').hasClass('has-exec')){
+                if($(this).val() != ""){
+                    $(this).removeClass('is-invalid error');
+                }else{
+                    $(this).addClass('is-invalid error');
+                }
+                execValdiationError();
             }
         });
+        $('select').on('change', function() {
+            if( $(this).val() != "" ){
+                $(this).removeClass('is-invalid error');
+                execValdiationError();
+            }else{
+                $(this).addClass('is-invalid error');
+                execValdiationError();
+            }
+        });
+        $('.rd').change(function () {
+            var hasCx = $(this);
+            if($('#form-apply').hasClass('has-exec')){
+                if(hasCx.hasClass('valid')){
+                    $(this).closest('.parent').find('.checkmark').each(function() {
+                        $(this).removeClass('is-invalid');
+                    }); 
+                }
+            }
+        });
+        $('.ch:checkbox').change(function () {
+            var hasCx = $(this);
+            if($('#form-apply').hasClass('has-exec')){
+                if($('input[name="question_skills[]"]:checked').length > 0){
+                    hasCx.closest('.parent').find('.checkmark.is-invalid').each(function() {
+                        $(this).removeClass('is-invalid');
+                    });
+                }
+                else {
+                    $(this).closest('.parent').find('.checkmark').each(function() {
+                        $(this).addClass('is-invalid');
+                        execValdiationError();
+                    });
+                }
+            }
+        });
+
 
         $(".photo_upload").on("dragover", function(event) {
             event.preventDefault();  
@@ -318,7 +459,6 @@
 
         function dropHandler(ev) {
             ev.preventDefault();  
-            //ev.stopPropagation();
             $('.photo_upload').removeClass('on_dragging');
             $('.tx-drag-drop').html('<span class="d-block w-100 tx-drag-drop"><a href="javascript:void(0);" onclick="searchImageFile(this);">Upload a file</a> or drag and drop here</span>');
             if (ev.dataTransfer.items && ev.dataTransfer.items.length > 1) {
@@ -342,10 +482,12 @@
                     $('.box-photo-upload.img-upload').removeClass('d-none');
                     $('.opt-image-edit').removeClass('d-none');
                     $('.box-photo-upload.img-upload').attr('src', ev.target.result);
+                    $('.data-file-photo').removeClass('error');
                     $('.box-photo-upload:not(.img-upload)').addClass('d-none');
+                    execValdiationError();
                 };
                 // read the image file as a data URL.
-            reader.readAsDataURL(ev.dataTransfer.files[0]);
+                reader.readAsDataURL(ev.dataTransfer.files[0]);
             }
         };
         function checkImgFileType(file_) {
@@ -376,6 +518,7 @@
                     $('.box-photo-upload.img-upload').removeClass('d-none');
                     $('.opt-image-edit').removeClass('d-none');
                     $('.box-photo-upload.img-upload').attr('src', e.target.result);
+                    $('.data-file-photo').removeClass('error');
                     $('.box-photo-upload:not(.img-upload)').addClass('d-none');
                 };
                 // read the image file as a data URL.

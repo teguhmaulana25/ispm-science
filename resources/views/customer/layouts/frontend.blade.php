@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap_4/css/bootstrap.min.css') }}">
     @stack('css')
     <!-- Main Css -->
-    <link href="{{ asset('css/fe.css?v=1.0.39') }}" rel="stylesheet">
+    <link href="{{ asset('css/fe.css?v=1.0.41') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
