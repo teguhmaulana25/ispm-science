@@ -36,7 +36,10 @@
                     <div class="form-group {{ $errors->has('percentage') ? 'has-error' : '' }}">
                         <label class="control-label col-md-2">Percentage</label>
                         <div class="col-md-3">
-                            <input type="text" name="percentage" class="form-control txt_number" value="{{ Request::old('percentage') ?: '' }}" required="required">
+                            <div class="input-group">
+                                <input type="text" name="percentage" class="form-control txt_number_full" value="{{ Request::old('percentage') ?: '' }}" required="required">
+                                <span class="input-group-addon">% </span>
+                            </div>
         
                             @if ($errors->has('percentage'))
                                 <span class="help-block">

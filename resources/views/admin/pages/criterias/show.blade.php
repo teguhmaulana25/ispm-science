@@ -31,7 +31,7 @@
                                 </tr>
                                 <tr>
                                     <th>Percentage</th>
-                                    <td>{{ $data->percentage }}</td>
+                                    <td>{{ round($data->percentage) }}</td>
                                 </tr>
                                 <tr>
                                     <th>Type</th>

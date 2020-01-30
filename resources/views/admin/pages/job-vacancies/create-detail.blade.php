@@ -85,6 +85,7 @@
                                                         </select>                                                    
                                                     </td>
                                                     <td class="text-center">
+                                                        <input type="hidden" name="data[job_criteria][{{ $key }}][criteria_id]" value="{{ $item->id}}" >
                                                         <input type="hidden" id="job_criteria_value{{ $key }}" name="data[job_criteria][{{ $key }}][value]" value="" >
                                                         <span id="job_criteria_value_html{{ $key }}">-</span>
                                                     </td>

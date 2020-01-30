@@ -101,6 +101,8 @@ class OnboardingController extends Controller
     ->get();
     $output = [];
     $master = [];
+    $data_candidate = [];
+    $status_value = [];
     foreach ($data as $key_candidate => $value_candidate) {
       $step_one = DB::table('candidate_details')
         ->select([
@@ -231,7 +233,9 @@ class OnboardingController extends Controller
 
     } // end foreach
 
-    $data_candidate = collect($status_value)->sortByDesc('status_value');
+    if ($status_value) {
+      $data_candidate = collect($status_value)->sortByDesc('status_value');
+    }    
 
     return view('admin.pages.onboardings.view')->with(compact('data_candidate', 'division', 'job_vacancy'));
   }
@@ -260,6 +264,80 @@ class OnboardingController extends Controller
         ->back()
         ->with('error', 'Please check your input');      
     }
+  }
+
+  public function viewCandidate($division, $job_vacancy, $candidate)
+  {
+    // $candidate   = \App\Candidate::findOrFail($candidate);
+    $candidate = \App\Candidate::select([
+      'candidates.*',
+      'job_vacancies.title as title_job',
+      'job_vacancies.division_id'
+    ])
+    ->leftJoin('job_vacancies', 'candidates.job_vacancy_id', '=', 'job_vacancies.id')
+    ->where('candidates.id', '=', $candidate)
+    ->first();
+    $jobVacancy = DB::table('job_vacancy_details')
+      ->where('job_vacancy_id', '=', $candidate->job_vacancy_id)
+      ->get();
+    $criteria = [];
+    foreach ($jobVacancy as $key => $value) {
+      $criteria_detail_id = $value->criteria_detail_id;
+      $checkCriteria = \App\Criteria::select([
+          'criterias.id'
+        ])
+        // ->where('criterias.step', '=', 2)
+        ->where(function ($query) use ($criteria_detail_id) {
+          $query->whereHas('criteriaDetail', function($query) use ($criteria_detail_id) {
+            $query->where('criteria_details.id', '=', $criteria_detail_id);
+          });
+        })
+        ->count();
+      if ($checkCriteria > 0) {
+          $criteria[] = \App\Criteria::select([
+            'criterias.id',
+            'criterias.name',
+            'criterias.percentage',
+            'criterias.type',
+            'criterias.step'
+          ])
+          // ->where('criterias.step', '=', 2)
+          ->where(function ($query) use ($criteria_detail_id) {
+            $query->whereHas('criteriaDetail', function($query) use ($criteria_detail_id) {
+              $query->where('criteria_details.id', '=', $criteria_detail_id);
+            });
+          })
+          ->orderBy('criterias.id', 'ASC')
+          ->first();
+      }
+    }
+
+    $jobSkill = DB::table('job_skill_details')
+      ->select(['job_vacancies.division_id', 'job_skill_details.id', 'job_skill_details.skill_id'])
+      ->leftJoin('job_vacancies', 'job_skill_details.job_vacancy_id', '=', 'job_vacancies.id')
+      ->where('job_vacancy_id', '=', $candidate->job_vacancy_id)
+      ->get();
+
+    $skill = [];
+    foreach ($jobSkill as $key => $value) {
+      $division_id = $value->division_id;
+      $checkSkill = \App\Skill::select([
+          'id',
+          'name'
+        ])
+        ->where('skills.id', '=', $value->skill_id)
+        ->count();
+      if ($checkSkill > 0) {
+        $skill[] = \App\Skill::select([
+            'id',
+            'name'
+          ])
+          ->where('skills.id', '=', $value->skill_id)
+          ->first();
+      }
+    }
+    return view('admin.pages.onboardings.viewCandidate')
+      ->with(compact('criteria','skill', 'division', 'job_vacancy', 'candidate'));
   }
 
   public function getCronbach($value, $type) { // 1 : label 2 : id

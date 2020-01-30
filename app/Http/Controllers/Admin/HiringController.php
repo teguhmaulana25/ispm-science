@@ -47,7 +47,7 @@ class HiringController extends Controller
 
     public function list($start_date, $end_date) {
       if ($start_date && $end_date) {
-          $getCandidate = Candidate::select([
+          $candidate = Candidate::select([
               'candidates.id',
               'name',
               'birth_place',
@@ -63,6 +63,24 @@ class HiringController extends Controller
             ->where('interview_date', '>=', $start_date)
             ->orderBy('interview_date', 'ASC')
             ->get();
+          $getCandidate = [];
+          foreach ($candidate as $key => $value) {
+            $checkStatus = DB::table('candidate_details')
+              ->select([
+                'candidate_details.id',
+                'candidate_details.answer',
+                'criteria_details.value as criteria_value',
+                'criterias.step',
+              ])
+              ->leftJoin('criteria_details', 'candidate_details.criteria_detail_id', '=', 'criteria_details.id')
+              ->leftJoin('criterias', 'criteria_details.criteria_id', '=', 'criterias.id')
+              ->where('candidate_details.candidate_id', '=', $value['id'])
+              ->where('criterias.step', '=', 2)
+              ->count();
+            if ($checkStatus == 0) {
+              $getCandidate[] = $value;
+            }
+          }
           return view('admin.pages.hiring.list')->with(compact('getCandidate'));
       } else {
         return redirect()

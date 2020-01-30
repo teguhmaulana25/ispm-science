@@ -20,6 +20,7 @@
                             <th>Id</th>
                             <th>Division</th>
                             <th>Title</th>
+                            {{-- <th>Criteria Percentage</th> --}}
                             <th>Display</th>
                             <th>Periode</th>
                             <th>Updated</th>
@@ -48,6 +49,7 @@
                     { data: 'id', name: 'id', visible: false, searchable: false },
                     { data: 'division_name', name: 'divisions.division_name'},
                     { data: 'title', name: 'job_vacancies.title'},
+                    // { data: 'percentage', name: 'percentage',  orderable: false, searchable: false, sClass: 'text-center' },
                     { data: 'status', name: 'status', searchable: false, sClass: 'text-center' },
                     { data: 'periode', name: 'periode', searchable: false, sClass: 'text-center' },
                     { data: 'updated_at', name: 'updated_at', searchable: false },

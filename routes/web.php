@@ -235,6 +235,10 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
             'uses' => 'OnboardingController@update',
             'as' => 'onboarding.update'
           ]);
+          Route::get('/view-candidate/{division}/{job_vacancy}/{candidate}', [
+            'uses' => 'OnboardingController@viewCandidate',
+            'as' => 'onboarding.view-candidate'
+          ]);
         });
 
         

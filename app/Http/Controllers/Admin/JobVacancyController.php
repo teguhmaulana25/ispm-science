@@ -78,44 +78,59 @@ class JobVacancyController extends Controller
         'description' => $request->input('description'),
         'start_date' => $start_date,
         'end_date' => $end_date,
-        'display' => $request->input('display'),
+        'display' => '0',
+        // 'display' => $request->input('display'),
       );
       $validation     = Validator::make($input, JobVacancy::$rules, $rule_message);
       if ($validation->passes()) {
-        $checkExist = \App\JobVacancy::where('division_id', $request->input('division_id'))
+        $getPercentageStepOne = DB::table('criterias')
+          ->where('criterias.step', '=', 1)
+          ->where('criterias.status', '=', 1)
+          ->sum('percentage');
+        $getPercentageStepTwo = DB::table('criterias')
+          ->where('criterias.step', '=', 2)
+          ->where('criterias.status', '=', 1)
+          ->sum('percentage');
+        if (round($getPercentageStepOne) >= 100 && round($getPercentageStepTwo) >= 100) {
+          $checkExist = \App\JobVacancy::where('division_id', $request->input('division_id'))
             ->where('title', '=', $request->input('title'))
             ->where('start_date', '=', $start_date)
             ->where('end_date', '=', $end_date)
+            ->where('display', '=', 1)
             ->count();
-        if ($checkExist > 0) {
-          return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', $request->input('title') . ' has already been taken.');
-        } else {
-          $data = JobVacancy::create(
-            [
-              'user_id' => Auth::user()->id,
-              'division_id' => $request->input('division_id'),
-              'title' => $request->input('title'),
-              'description' => $request->input('description'),
-              'start_date' => $start_date,
-              'end_date' => $end_date,
-              'display' => $request->input('display')
-            ]);
-          if ($data) {
-            return redirect()
-              ->route('job-vacancies.create-detail', $data->id)
-              ->with('info', $request->input('title') . ' has been created.');
-          } else {
+          if ($checkExist > 0) {
             return redirect()
               ->back()
               ->withInput()
-              ->withErrors($validation->errors())
-              ->with('error', $request->input('title') . ' failed to create.');    
+              ->with('error', $request->input('title') . ' has already been taken.');
+          } else {
+            $data = JobVacancy::create(
+              [
+                'user_id' => Auth::user()->id,
+                'division_id' => $request->input('division_id'),
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'display' => $request->input('display'),
+              ]);
+            if ($data) {
+              return redirect()
+                ->route('job-vacancies.create-detail', $data->id)
+                ->with('info', $request->input('title') . ' has been created.');
+            } else {
+              return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors($validation->errors())
+                ->with('error', $request->input('title') . ' failed to create.');    
+            }
           }
+        } else {
+          return redirect()
+            ->back()
+            ->with('error', 'Please check field percentage in Criteria menu where first and second step must be 100%. Currently first step is <b>'.round($getPercentageStepOne).'%</b> and second step is <b>'.round($getPercentageStepTwo).'%</b>');
         }
-        
       }else {
 
         return redirect()
@@ -149,17 +164,25 @@ class JobVacancyController extends Controller
     public function edit($id)
     {
       $data   = JobVacancy::findOrFail($id);
-      $jobCriteria = \App\JobVacancyDetail::where('job_vacancy_id', '=', $id)
-        ->orderBy('id', 'ASC')
-        ->get();
-      $jobSkill = \App\JobSkillDetail::where('job_vacancy_id', '=', $id)
-        ->orderBy('id', 'ASC')
-        ->get();
-      $list_division     = DB::table('divisions')->where('divisions.status', '=', 1)->pluck('name', 'id');
-      $start_date = Carbon\Carbon::parse($data->start_date)->format('m/d/Y h:m A');
-      $end_date = Carbon\Carbon::parse($data->end_date)->format('m/d/Y h:m A');
-      return view('admin.pages.job-vacancies.edit')
-        ->with(compact('data', 'list_division', 'jobCriteria', 'jobSkill', 'start_date', 'end_date'));
+      $checkAvailabelData = \App\JobVacancyDetail::where('job_vacancy_id', '=', $id)
+        ->count();
+      if ($checkAvailabelData > 0 ) {
+        $jobCriteria = \App\JobVacancyDetail::where('job_vacancy_id', '=', $id)
+          ->orderBy('id', 'ASC')
+          ->get();
+        $jobSkill = \App\JobSkillDetail::where('job_vacancy_id', '=', $id)
+          ->orderBy('id', 'ASC')
+          ->get();
+        $list_division     = DB::table('divisions')->where('divisions.status', '=', 1)->pluck('name', 'id');
+        $start_date = Carbon\Carbon::parse($data->start_date)->format('m/d/Y h:m A');
+        $end_date = Carbon\Carbon::parse($data->end_date)->format('m/d/Y h:m A');
+        
+        return view('admin.pages.job-vacancies.edit')
+          ->with(compact('data', 'list_division', 'jobCriteria', 'jobSkill', 'start_date', 'end_date'));
+      } else {
+        return redirect()
+          ->route('job-vacancies.create-detail', $data->id);
+      }
     }
 
     public function update(Request $request, $id)
@@ -275,6 +298,7 @@ class JobVacancyController extends Controller
     {
       $data   = JobVacancy::findOrFail($job_vacancy_id);
       $jobCriteria = \App\Criteria::orderBy('id', 'ASC')
+        ->where('status', '=', 1)
         ->get();
       $jobSkill = \App\Skill::where('division_id', '=', $data->division_id)
         ->where('status', '=', 1)
@@ -287,6 +311,7 @@ class JobVacancyController extends Controller
     public function store_detail(Request $request, $job_vacancy_id) {
       $input = $request->all();
       if ($input['data']['job_criteria'] && $input['data']['job_skill']) {
+        $dataJobVacancy = JobVacancy::findOrFail($job_vacancy_id);
         $checkExist = \App\JobVacancyDetail::where('job_vacancy_id', '=', $job_vacancy_id)->count();
         if ($checkExist > 0) {
           return redirect()
@@ -294,23 +319,47 @@ class JobVacancyController extends Controller
           ->withInput()
           ->with('error', 'Data already exists !!');    
         } else {
-          foreach ($input['data']['job_criteria'] as $key => $value) {
-            \App\JobVacancyDetail::create([
-              'job_vacancy_id' => $job_vacancy_id,
-              'criteria_detail_id' => $value['id'],
-              'value' => $value['value']
-            ]);
+          $getPercentageStepOne = DB::table('criterias')
+            ->where('criterias.step', '=', 1)
+            ->where('criterias.status', '=', 1)
+            ->sum('percentage');
+          $getPercentageStepTwo = DB::table('criterias')
+            ->where('criterias.step', '=', 2)
+            ->where('criterias.status', '=', 1)
+            ->sum('percentage');
+          if (round($getPercentageStepOne) >= 100 && round($getPercentageStepTwo) >= 100) {
+            foreach ($input['data']['job_criteria'] as $key => $value) {
+              \App\JobVacancyDetail::create([
+                'job_vacancy_id' => $job_vacancy_id,
+                'criteria_detail_id' => $value['id'],
+                'value' => $value['value']
+              ]);
+            }
+            foreach ($input['data']['job_skill'] as $key => $value) {
+              \App\JobSkillDetail::create([
+                'job_vacancy_id' => $job_vacancy_id,
+                'skill_id' => $value['id'],
+                'value' => $value['value']
+              ]);
+            }
+            $update = JobVacancy::where('id', $job_vacancy_id)
+              ->update([
+                'user_id' => Auth::user()->id,
+                'display' => $dataJobVacancy->display,
+              ]);
+            return redirect()
+              ->route('job-vacancies.show', $job_vacancy_id)
+              ->with('info', 'Data has been created.');
+          } else {
+            $update = JobVacancy::where('id', $job_vacancy_id)
+              ->update([
+                'user_id' => Auth::user()->id,
+                'display' => 0,
+              ]);
+            return redirect()
+              ->back()
+              ->with('error', 'Please check field percentage in Criteria menu where first and second step must be 100%. Currently first step is <b>'.round($getPercentageStepOne).'%</b> and second step is <b>'.round($getPercentageStepTwo).'%</b>');
           }
-          foreach ($input['data']['job_skill'] as $key => $value) {
-            \App\JobSkillDetail::create([
-              'job_vacancy_id' => $job_vacancy_id,
-              'skill_id' => $value['id'],
-              'value' => $value['value']
-            ]);
-          }
-          return redirect()
-            ->route('job-vacancies.show', $job_vacancy_id)
-            ->with('info', 'Data has been created.');
         }
       } else {
         return redirect()

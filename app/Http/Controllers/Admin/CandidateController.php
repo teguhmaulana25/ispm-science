@@ -97,11 +97,13 @@ class CandidateController extends Controller
     ->join('job_vacancies', 'candidates.job_vacancy_id', '=', 'job_vacancies.id')
     ->where('job_vacancies.division_id', '=', $division)
     ->where('candidates.job_vacancy_id', '=', $job_vacancy)
-    // ->where('candidates.interview_date', '!=', null)
+    ->where('candidates.interview_date', '!=', null)
     // ->where('candidates.id', '=', 3)
     ->get();
     $output = [];
     $master = [];
+    $data_candidate = [];
+    $status_value = [];
     foreach ($data as $key_candidate => $value_candidate) {
       $step_one = DB::table('candidate_details')
         ->select([
@@ -175,7 +177,9 @@ class CandidateController extends Controller
 
     } // end foreach
 
-    $data_candidate = collect($status_value)->sortByDesc('status_value');
+    if ($status_value) {
+      $data_candidate = collect($status_value)->sortByDesc('status_value');
+    }
 
     return view('admin.pages.candidates.view')->with(compact('data_candidate', 'division', 'job_vacancy'));
   }

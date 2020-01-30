@@ -152,6 +152,74 @@ function priority($status, $label = false) {
 	return $string;
 }
 
+function gender($code)
+{
+    if($code == 1)
+    {
+        $output = 'Male';
+    }elseif($code == 2){
+        $output = 'Female';
+    }else{
+        $output = 'Not Found';
+    }
+    return $output;
+}
+
+function religion($code)
+{
+    if($code == 1)
+    {
+        $output = 'Islam';
+    }elseif($code == 2){
+		$output = 'Kristen';
+	}elseif($code == 3){
+		$output = 'Hindu';
+	}elseif($code == 4){
+		$output = 'Buddha';
+	}elseif($code == 5){
+		$output = 'Konghucu';
+	}elseif($code == 6){
+		$output = 'Lainnya';
+		
+    }else{
+        $output = 'Not Found';
+    }
+    return $output;
+}
+
+function blood_type($code)
+{
+    if($code == 1)
+    {
+        $output = 'O';
+    }elseif($code == 2){
+		$output = 'A';
+	}elseif($code == 3){
+		$output = 'B';
+	}elseif($code == 4){
+		$output = 'AB';		
+    }else{
+        $output = 'Not Found';
+    }
+    return $output;
+}
+
+function get_data_picture($file_directory, $file_name, $type_file = null)
+{
+    /*----------  IF TYPE SMALL  ----------*/    
+    if(!empty($file_name))
+    {
+        if($type_file == 'small')
+        {
+            $output     = asset($file_directory.'/small/'.$file_name.'');
+        }else{
+            $output     = asset($file_directory.'/'.$file_name.'');
+        }        
+    }else{
+        $output     = asset('img/no-image-found.jpg');
+    }
+    return $output;
+}
 /**
  * 
  * USING DB

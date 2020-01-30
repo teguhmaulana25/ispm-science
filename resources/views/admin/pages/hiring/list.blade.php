@@ -34,6 +34,7 @@
 										<td class="text-center">{{ get_division($item->division_id) }}</td>
 										<td>
 											<address>
+												<b>Name : </b>{{ $item->name }}<br/>
 												<b>Birthday : </b>{{ $item->birth_place.', '.$item->birth_date }}<br/>
 												<b>Email : </b>{{ $item->email }}<br/>
 												<b>Phone : </b>{{ $item->phone }}

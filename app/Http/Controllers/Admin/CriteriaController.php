@@ -8,6 +8,7 @@ use Session;
 use Validator;
 use App\Criteria;
 use Yajra\Datatables\Datatables;
+use DB;
 class CriteriaController extends Controller
 {
     public function index()
@@ -31,6 +32,9 @@ class CriteriaController extends Controller
       return Datatables::of($data_master)
         ->editColumn('status', function($data) {
           return AI_status($data->status);
+        })
+        ->editColumn('percentage', function($data) {
+          return round($data->percentage).'%';
         })
         ->editColumn('step', function($data) {
           return criteria_step($data->step);
@@ -61,25 +65,40 @@ class CriteriaController extends Controller
       $input = $request->all();
       $validation = Validator::make($input, Criteria::$rules);
       if ($validation->passes()) {
-        $data = Criteria::create(
-          [
-            'name' => $request->input('name'),
-            'percentage' => $request->input('percentage'),
-            'type' => $request->input('type'),
-            'step' => $request->input('step'),
-            'status' => $request->input('status')
-          ]);
-        if ($data) {
-          return redirect()
-            ->route('criteria-details.show', $data->id)
-            ->with('info', $request->input('name') . ' has been created.');
-        } else {
+        $getPercentage = DB::table('criterias')
+          ->where('criterias.step', '=', $request->input('step'))
+          ->where('criterias.status', '=', 1)
+          ->sum('percentage');
+        $totalPercentage = $getPercentage;
+        if ($request->input('status') == 1) {
+          $totalPercentage = $getPercentage + $request->input('percentage');
+        }
+        if ($totalPercentage > 100) {
           return redirect()
             ->back()
-            ->withInput()
-            ->withErrors($validation->errors())
-            ->with('error', $request->input('name') . ' failed to create.');    
+            ->with('error', 'Percentage exceeds 100. the percentage has now reached <b>'. round($getPercentage) .'% </b>');
+        } else {
+          $data = Criteria::create(
+            [
+              'name' => $request->input('name'),
+              'percentage' => $request->input('percentage'),
+              'type' => $request->input('type'),
+              'step' => $request->input('step'),
+              'status' => $request->input('status')
+            ]);
+          if ($data) {
+            return redirect()
+              ->route('criteria-details.show', $data->id)
+              ->with('info', $request->input('name') . ' has been created.');
+          } else {
+            return redirect()
+              ->back()
+              ->withInput()
+              ->withErrors($validation->errors())
+              ->with('error', $request->input('name') . ' failed to create.');    
+          }
         }
+
       }else {
 
         return redirect()
@@ -102,6 +121,7 @@ class CriteriaController extends Controller
     public function edit($id)
     {
       $data   = Criteria::findOrFail($id);
+      $data->percentage = round($data->percentage);
       return view('admin.pages.criterias.edit')
         ->with(compact('data'));
     }
@@ -112,24 +132,39 @@ class CriteriaController extends Controller
       $validation = Validator::make($request->all(), Criteria::rule_edit($id));
       if ($validation->passes()) {
           $data = Criteria::findOrFail($id);
-          $update = Criteria::where('id', $data->id)
-            ->update([
-              'name' => $request->input('name'),
-              'percentage' => $request->input('percentage'),
-              'type' => $request->input('type'),
-              'step' => $request->input('step'),
-              'status' => $request->input('status')
-            ]);
-          if ($update) {
+          $getPercentage = DB::table('criterias')
+            ->where('criterias.step', '=', $request->input('step'))
+            ->where('criterias.status', '=', 1)
+            ->where('criterias.id', '!=', $data->id)
+            ->sum('percentage');
+          $totalPercentage = $getPercentage;
+          if ($request->input('status') == 1) {
+            $totalPercentage = $getPercentage + $request->input('percentage');
+          }
+          if ($totalPercentage > 100) {
             return redirect()
-            ->back()
-            ->with('info', $request->input('name') . ' has been updated.');
+              ->back()
+              ->with('error', 'Percentage exceeds 100. the percentage has now reached <b>'. round($getPercentage) .'% </b>');
           } else {
-            return redirect()
-            ->back()
-            ->withInput()
-            ->withErrors($validation->errors())
-            ->with('error', $request->input('name') . ' failed to update.');            
+            $update = Criteria::where('id', $data->id)
+              ->update([
+                'name' => $request->input('name'),
+                'percentage' => $request->input('percentage'),
+                'type' => $request->input('type'),
+                'step' => $request->input('step'),
+                'status' => $request->input('status')
+              ]);
+            if ($update) {
+              return redirect()
+              ->back()
+              ->with('info', $request->input('name') . ' has been updated.');
+            } else {
+              return redirect()
+              ->back()
+              ->withInput()
+              ->withErrors($validation->errors())
+              ->with('error', $request->input('name') . ' failed to update.');            
+            }
           }
 
       }else{
