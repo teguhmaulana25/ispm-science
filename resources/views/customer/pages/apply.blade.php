@@ -406,14 +406,15 @@
                 execValdiationError();
             }
         });
-        $('select').on('change', function() {
-            if( $(this).val() != "" ){
-                $(this).removeClass('is-invalid error');
-                execValdiationError();
-            }else{
-                $(this).addClass('is-invalid error');
-                execValdiationError();
-            }
+        $('select').on('change keyup paste input blur focus', function() {
+        	if($('#form-apply').hasClass('has-exec')){
+	            if( $(this).val() != "" ){
+	                $(this).removeClass('is-invalid error');
+	            }else{
+	                $(this).addClass('is-invalid error');
+	            }
+	            execValdiationError();
+        	}
         });
         $('.rd').change(function () {
             var hasCx = $(this);
@@ -484,7 +485,6 @@
                     $('.box-photo-upload.img-upload').attr('src', ev.target.result);
                     $('.data-file-photo').removeClass('error');
                     $('.box-photo-upload:not(.img-upload)').addClass('d-none');
-                    execValdiationError();
                 };
                 // read the image file as a data URL.
                 reader.readAsDataURL(ev.dataTransfer.files[0]);
