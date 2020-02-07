@@ -97,7 +97,7 @@ class CandidateController extends Controller
     ->join('job_vacancies', 'candidates.job_vacancy_id', '=', 'job_vacancies.id')
     ->where('job_vacancies.division_id', '=', $division)
     ->where('candidates.job_vacancy_id', '=', $job_vacancy)
-    ->where('candidates.interview_date', '!=', null)
+    ->where('candidates.interview_date', '=', null)
     // ->where('candidates.id', '=', 3)
     ->get();
     $output = [];
