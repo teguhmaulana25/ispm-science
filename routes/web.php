@@ -187,6 +187,10 @@ Route::group(['namespace' => 'Admin', 'domain' => env('APP_ADMIN_URL')], functio
             'uses' => 'CandidateController@saveIntv',
             'as' => 'candidates.saveIntv'
           ]);
+          Route::get('/view-candidate/{division}/{job_vacancy}/{candidate}', [
+            'uses' => 'CandidateController@viewCandidate',
+            'as' => 'candidates.view-candidate'
+          ]);
         });
 
         // {domain_name}/hiring/* routes

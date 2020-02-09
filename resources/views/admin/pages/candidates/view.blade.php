@@ -53,6 +53,7 @@
                                     <th width="20%">Email</th>
                                     <th width="13%">Apply</th>
                                     <th width="13%">Status</th>
+                                    <th width="13%">View</th>
                                     <th width="5%" class="text-center">#</th>
                                 </tr>
                             </thead>
@@ -69,6 +70,11 @@
                                             <td>{{ $item['candidate']->email }}</td>
                                             <td>{{ humanize_date_format($item['candidate']->created_at) }}</td>
                                             <td>{{ $item['status_description'] }}</td>
+                                            <td>
+                                                <a href="{{ route('candidates.view-candidate', ['division'=>$division, 'job_vacancy'=>$job_vacancy,'candidate' => $item['candidate']->id]) }}" class="btn btn-info btn-block" target="_blank">
+                                                <span class="fas fa-eye fa-fw"></span> View
+                                                </a>
+                                            </td>
                                             <td class="text-center">
                                                 <label>
                                                     <input type="hidden" name="data[DataCandidate][{{ $key }}][candidate]" class="candidate_{{ $item['candidate']->id }}" value="{{ $item['candidate']->id }}" readonly disabled>
@@ -81,14 +87,14 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="7" class="text-center"><i class="fa fa-exclamation-circle fa-fw"></i> There is no data.</td>
+                                        <td colspan="8" class="text-center"><i class="fa fa-exclamation-circle fa-fw"></i> There is no data.</td>
                                     </tr>
                                 @endif
                             </tbody>
                             @if(count($data_candidate) > 0)
                                 <tfoot>
                                     <tr>
-                                        <td colspan="7">
+                                        <td colspan="8">
                                             <div class="btn-block-intv">
                                                 <button type="button" class="btn btn-info btn-block" id="btn-intv" onclick="popupIntv('checkbox_email[]');">Add Interview Date</button>
                                             </div>
